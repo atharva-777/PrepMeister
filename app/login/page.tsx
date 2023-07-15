@@ -65,6 +65,8 @@ const Login = () => {
         }
         <br />  
       <h3>New User? <Link href='/signup'>Signup</Link></h3>
+      <br />
+      <Link href='/'>Home</Link>
     </div>
   );
 };
