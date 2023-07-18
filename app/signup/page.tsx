@@ -1,17 +1,24 @@
 "use client";
 import Link from 'next/link';
-import React,{ useState } from 'react'
+import React,{ useState,useEffect } from 'react'
 
 function SignUp () {
-//   const [isLogin, setIsLogin] = useState(true);
-// eslint-disable-next-line react-hooks/rules-of-hooks
-const [isLogin,setIsLogin] = useState(false);
+  const [signup,setSignup] = useState<boolean>(false);
+  const [disableButton,setDisableButton] = useState(true);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [user, setUser] = useState({
     username:"",
     email: "",
     password: "",
   });
+  useEffect(() => {
+    if(user.email.endsWith("@gmail.com") && user.username.length > 0) {
+      setDisableButton(false);
+    }else{
+      setDisableButton(true);
+    }
+  }, [user])
+  
   const handleChange = (e: { target: any }) => {
     const { target } = e;
     const { name, value } = target;
@@ -22,7 +29,9 @@ const [isLogin,setIsLogin] = useState(false);
   };
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
+    alert('sumbmitted')
     e.preventDefault();
+    setSignup(true);
   };
   return (
     <div className="text-center justify-center items-center mt-40">
@@ -72,13 +81,17 @@ const [isLogin,setIsLogin] = useState(false);
           <button
           onClick={(e)=>handleSubmit(e)}
             type="submit"
-            className="hover:bg-green-600 bg-green-400 p-3 font-medium text-center rounded text-md"
+            // className="hover:bg-green-600 bg-green-400 p-3 font-medium text-center rounded text-md"
+            className={`${signup==true?"hover:bg-green-600":'hover:bg-red-600'} bg-green-400 p-3 font-medium text-center rounded text-md`}
+            disabled={disableButton}
           >
             Submit
           </button>
         </div>
       </form>
     <h3>Already have account? <Link href='/login'>Login</Link></h3>
+    <br />
+    <Link href={signup===true?'/':'/login'}>Protected Route</Link>
     </div>
   );
 }
