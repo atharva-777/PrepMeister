@@ -46,8 +46,7 @@ function SignUp() {
         router.push('/login')
       }, 2000);
     } catch (error:any) {
-      // console.log('Error occured')
-      toast.error(error)
+      toast.error('User already exists')
     }
   };
   return (
