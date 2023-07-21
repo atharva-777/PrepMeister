@@ -1,8 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import axios from "axios";
+import toast,{Toaster} from 'react-hot-toast'
+import { useRouter } from "next/navigation";
 
 const Login = () => {
+  const router = useRouter()
     const [isLogin,setIsLogin] = useState(false);
   const [user, setUser] = useState({
     email: "",
@@ -16,13 +20,30 @@ const Login = () => {
       [name]: value,
     });
   };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    try{
+      await axios.post('/api/users/login',user)
+      toast.success('Login successful')
+      setTimeout(() => {
+        router.push('/')
+      }, 2000);
+    }catch(error){
+      console.log(error)
+      toast.error('Wrong password');
+    }
+  }
+
   return (
     <div className="text-center justify-center items-center mt-40">
+      <Toaster/>
       <h1 className="text-3xl font-bold p-2">
         Login
       </h1>
       <form
         action="#"
+        onSubmit={(e)=>handleSubmit(e)}
         className="my-12 justify-center items-center text-center"
       >
         <div className="space-x-4 m-4">
