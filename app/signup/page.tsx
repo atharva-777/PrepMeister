@@ -1,24 +1,26 @@
 "use client";
-import Link from 'next/link';
-import React,{ useState,useEffect } from 'react'
+import axios from "axios";
+import Link from "next/link";
+import React, { useState, useEffect } from "react";
+import toast,{Toaster} from 'react-hot-toast'
+import { useRouter } from "next/navigation";
 
-function SignUp () {
-  const [signup,setSignup] = useState<boolean>(false);
-  const [disableButton,setDisableButton] = useState(true);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+function SignUp() {
+  const router = useRouter();
+  const [disableButton, setDisableButton] = useState(true);
   const [user, setUser] = useState({
-    username:"",
+    username: "",
     email: "",
     password: "",
   });
   useEffect(() => {
-    if(user.email.endsWith("@gmail.com") && user.username.length > 0) {
+    if (user.email.endsWith("@gmail.com") && user.username.length > 0 && user.password.length>5) {
       setDisableButton(false);
-    }else{
+    } else {
       setDisableButton(true);
     }
-  }, [user])
-  
+  }, [user]);
+
   const handleChange = (e: { target: any }) => {
     const { target } = e;
     const { name, value } = target;
@@ -28,13 +30,30 @@ function SignUp () {
     });
   };
 
-  const handleSubmit = (e: { preventDefault: () => void }) => {
-    alert('sumbmitted')
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    setSignup(true);
+    try {
+      // const data = await axios.post('/api/users/signup',user);
+      //  const resp = await fetch("/api/users/signup", {
+      //    method: "POST",
+      //    body: JSON.stringify(user),
+      //  });
+      // console.log(resp)
+      const data = await axios({method : 'POST',url:'/api/users/signup',data:user})
+      // console.log(data)
+      toast.success('User saved Successfully')
+      setTimeout(() => {
+        router.push('/login')
+      }, 2000);
+    } catch (error:any) {
+      // console.log('Error occured')
+      toast.error(error)
+    }
   };
   return (
     <div className="text-center justify-center items-center mt-40">
+      <Toaster />
+
       <h1 className="text-3xl font-bold p-2">Signup</h1>
       <form
         action="#"
@@ -79,19 +98,21 @@ function SignUp () {
 
         <div className="text-center">
           <button
-          onClick={(e)=>handleSubmit(e)}
+            onClick={(e) => handleSubmit(e)}
             type="submit"
             // className="hover:bg-green-600 bg-green-400 p-3 font-medium text-center rounded text-md"
-            className={`${signup==true?"hover:bg-green-600":'hover:bg-red-600'} bg-green-400 p-3 font-medium text-center rounded text-md`}
+            className={`${
+              disableButton == true ? "hover:bg-red-600" : "hover:bg-green-600"
+            } bg-green-400 p-3 font-medium text-center rounded text-md`}
             disabled={disableButton}
           >
             Submit
           </button>
         </div>
       </form>
-    <h3>Already have account? <Link href='/login'>Login</Link></h3>
-    <br />
-    <Link href={signup===true?'/':'/login'}>Protected Route</Link>
+      <h3>
+        Already have account? <Link href="/login">Login</Link>
+      </h3>
     </div>
   );
 }
