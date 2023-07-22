@@ -4,12 +4,6 @@ import { NextRequest,NextResponse } from "next/server";
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken';
 
-interface UserType {
-    username: string;
-    password: string;
-    email: string;
-}
-
 connect()
 
 export async function POST(request:NextRequest){
