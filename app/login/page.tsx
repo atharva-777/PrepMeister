@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
 import toast,{Toaster} from 'react-hot-toast'
@@ -21,13 +21,16 @@ const Login = () => {
     });
   };
 
+  
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try{
       await axios.post('/api/users/login',user)
       toast.success('Login successful')
+      setIsLogin(true);
       setTimeout(() => {
-        router.push('/')
+        router.push('/profile')
       }, 2000);
     }catch(error){
       console.log(error)
