@@ -1,17 +1,19 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import Link from "next/link";
 import axios from "axios";
 import toast,{Toaster} from 'react-hot-toast'
 import { useRouter } from "next/navigation";
+import { UserContext } from "../context/UserProvider";
 
 const Login = () => {
   const router = useRouter()
+  const {user,setUser} = useContext<any>(UserContext);
     const [isLogin,setIsLogin] = useState(false);
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-  });
+  // const [user, setUser] = useState({
+  //   email: "",
+  //   password: "",
+  // });
   const handleChange = (e: { target: any }) => {
     const { target } = e;
     const { name, value } = target;
