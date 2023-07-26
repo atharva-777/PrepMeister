@@ -8,17 +8,18 @@ import { UserContext } from "../context/UserProvider";
 
 const Login = () => {
   const router = useRouter()
+  const [data,setData] = useState({
+    email:'',
+    password:'',
+  })
   const {user,setUser} = useContext<any>(UserContext);
     const [isLogin,setIsLogin] = useState(false);
-  // const [user, setUser] = useState({
-  //   email: "",
-  //   password: "",
-  // });
+  
   const handleChange = (e: { target: any }) => {
     const { target } = e;
     const { name, value } = target;
-    setUser({
-      ...user,
+    setData({
+      ...data,
       [name]: value,
     });
   };
@@ -28,9 +29,11 @@ const Login = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try{
-      await axios.post('/api/users/login',user)
+      await axios.post('/api/users/login',data)
       toast.success('Login successful')
       setIsLogin(true);
+      const res = await axios.get("/api/users/me");
+      setUser({username:res.data.data.username,email:res.data.data.email});
       setTimeout(() => {
         router.push('/profile')
       }, 2000);
@@ -58,7 +61,7 @@ const Login = () => {
             name="email"
             placeholder="Enter Email"
             className="border shadow hover:shadow-slate-700 p-4"
-            value={user.email}
+            value={data.email}
             onChange={handleChange}
             required
           />
@@ -70,7 +73,7 @@ const Login = () => {
             name="password"
             placeholder="Enter Password"
             className="border shadow hover:shadow-slate-700 p-4"
-            value={user.password}
+            value={data.password}
             onChange={handleChange}
             required
           />
