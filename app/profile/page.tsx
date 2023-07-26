@@ -1,12 +1,13 @@
 "use client";
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect,useContext } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
-import { get } from "http";
+import { UserContext } from "../context/UserProvider";
 
 const UserProfile = () => {
   const router = useRouter()
+  const {user,setUser} = useContext<any>(UserContext);
   const [data,setData] = useState({
     _id:"",
     username:"",
@@ -14,6 +15,7 @@ const UserProfile = () => {
   });
   const Logout =async () => {
     try{
+      setUser(null);
       await axios.get('/api/users/logout')
       router.push('/')
     }catch(error:any){
@@ -24,6 +26,7 @@ const UserProfile = () => {
   const getUserDetails = async () => {
     const res = await axios.get('/api/users/me')
     setData(res.data.data);
+    setUser({id:res.data.data._id,username:res.data.data.username, email:res.data.data.email})
   }
 
   useEffect(()=>{
@@ -35,7 +38,7 @@ const UserProfile = () => {
       <div>
         <h1 className="text-4xl m-4"> Welcome to Profile </h1>
         <h2>
-          {!data ? (
+          {!user ? (
             "Nothing"
           ) : (
             <Link href={`/profile/${data._id}`}>Go to Profile</Link>
@@ -46,11 +49,13 @@ const UserProfile = () => {
 
       <div className="text-center m-8 bg-blue-200 max-w-2xl p-4 rounded-full mx-auto">
         <h3>User Details</h3>
+          {user?
         <ul>
-        <li>{data._id}</li>
-        <li>{data.username}</li>
-        <li>{data.email}</li>
-        </ul>
+          <li>{user.id}</li>
+          <li>{user.username}</li>
+          <li>{user.email}</li>
+          </ul>
+       : null}
       </div>
 
       <button
