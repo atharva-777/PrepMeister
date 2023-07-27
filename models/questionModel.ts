@@ -12,6 +12,16 @@ const questionScheme = new mongoose.Schema({
     description: {
         type: 'string',
         required: true,
+    },
+    tags : {
+        type: 'array',
+    },
+    company : {
+        type: 'array',
+    },
+    level : {
+        type: 'string',
+        required: true,
     }
 })
 
