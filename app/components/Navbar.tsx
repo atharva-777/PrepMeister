@@ -6,11 +6,16 @@ import { UserContext } from "../context/UserProvider";
 
 const Navbar = () => {
   const { user, setUser } = useContext<any>(UserContext);
-  console.log(user);
   return (
     <header className="w-full mx-auto p-4 sm:px-20 fixed top-0 z-50 shadow border-b-2">
       <div className="justify-between md:items-center md:flex">
         <h1 className="text-4xl">PrepMeister</h1>
+        <div>
+          <Link href={'/problems'}>Problems</Link>
+        </div>
+        {/* <div>Problems</div> */}
+        <div>Discussion</div>
+        <div>Groups</div>
         {user ? (
           <div>
             <p>name : {!user.username ? "no" : user.username}</p>
