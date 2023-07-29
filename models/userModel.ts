@@ -23,6 +23,9 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    solved :{
+        type:'array',
+    },
     forgotPasswordToken: String,
     forgotPasswordTokenExpiry: Date,
     verifyToken: String,
