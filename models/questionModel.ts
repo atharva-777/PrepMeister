@@ -1,30 +1,40 @@
 import mongoose from "mongoose";
 
-const questionScheme = new mongoose.Schema({
+const questionSchema = new mongoose.Schema({
     title:{
-        type: 'string',
+        type: String,
         required: true,
     },
     number:{
-        type: 'number',
+        type: Number,
         required: true,
     },
     description: {
-        type: 'string',
+        type: String,
         required: true,
     },
     tags : {
-        type: 'array',
+        type: Array,
     },
     company : {
-        type: 'array',
+        type: Array,
     },
     level : {
-        type: 'string',
+        type: String,
         required: true,
+    },
+    slug : {
+        type: String,
+        unique: true,
+        slug: "title",
     }
 })
 
-const Question = mongoose.models.questions || mongoose.model("questions", questionScheme);
+// questionSchema.pre('save',function(){
+//     this.slug = slugify(this.title,{lower:true});
+// })
+
+
+const Question = mongoose.models.questions || mongoose.model("questions", questionSchema);
 
 export default Question
