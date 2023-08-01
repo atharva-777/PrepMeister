@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
 import { UserContext } from "../context/UserProvider";
+import Navbar from "../components/Navbar";
 
 const UserProfile = () => {
   const router = useRouter()
@@ -34,6 +35,8 @@ const UserProfile = () => {
   },[])
 
   return (
+    <div>
+<Navbar/>
     <div className="text-center place-items-center place-content-center justify-center mt-48">
       <div>
         <h1 className="text-4xl m-4"> Welcome to Profile </h1>
@@ -61,10 +64,11 @@ const UserProfile = () => {
       <button
         className="p-3 m-4 bg-red-400 rounded hover:bg-red-500 hover:z-20"
         onClick={(e) => Logout()}
-      >
+        >
         Logout
       </button>
     </div>
+        </div>
   );
 };
 

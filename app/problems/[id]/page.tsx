@@ -1,9 +1,16 @@
-import React from 'react'
+"use client";
+import Topbar from "@/app/components/Topbar";
+import React from "react";
 
-const Question = ({params}:any) => {
+type ProblemPageProps = {};
+
+const ProblemPage: React.FC<ProblemPageProps> = ({ params }: any) => {
   return (
-    <div className='mt-32 text-center text-4xl'>{params.id}</div>
-  )
-}
+    <div>
+      <Topbar problemPage={true} />
+      <div className="text-center text-lg">Problem : {params.id}</div>
+    </div>
+  );
+};
 
-export default Question
+export default ProblemPage;

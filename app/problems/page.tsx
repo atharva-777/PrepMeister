@@ -7,6 +7,7 @@ import { UserContext } from "../context/UserProvider";
 import { useContext } from "react";
 import { BsCheck } from "react-icons/bs";
 import { FaCross } from "react-icons/fa";
+import Navbar from "../components/Navbar";
 
 interface ProblemType {
   _id: string,
@@ -58,6 +59,8 @@ const Problems = () => {
   };
 
   return (
+    <div>
+<Navbar/>
     <div className="m-32  flex justify-center mx-auto">
       {/* <button onClick={getSolvedProblems}>Get Probs</button> */}
       <table className="w-full max-w-7xl text-center space-x-10 border p-3">
@@ -74,32 +77,32 @@ const Problems = () => {
           {data &&
             data.map((problem, idx) => {
               const difficulyColor =
-                problem.level === "easy"
+              problem.level === "easy"
                   ? "text-green-400"
                   : problem.level === "medium"
                   ? "text-orange-400"
                   : "text-red-400";
-              return (
-                <tr
+                  return (
+                    <tr
                   key={idx}
                   className={`${
                     problem.number % 2 == 1 ? "bg-stone-400" : ""
                   } m-2`}
-                >
+                  >
                   <td className="p-5 text-center">
                     {/* No */}
                     {user && solved?.includes(problem.number) === true ? (
                       <BsCheck />
                     ) : (
                       <FaCross />
-                    )}
+                      )}
                   </td>
                   <td>{problem.number}</td>
                   <td>
                     <Link
                       className="hover:text-blue-500"
                       href={`/problems/${problem.slug}`}
-                    >
+                      >
                       {problem.title}
                     </Link>
                   </td>
@@ -121,6 +124,7 @@ const Problems = () => {
         </tbody>
       </table>
     </div>
+              </div>
   );
 };
 
