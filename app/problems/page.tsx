@@ -2,7 +2,6 @@
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import slugify from "slugify";
 import Link from "next/link";
 import { UserContext } from "../context/UserProvider";
 import { useContext } from "react";
@@ -10,12 +9,14 @@ import { BsCheck } from "react-icons/bs";
 import { FaCross } from "react-icons/fa";
 
 interface ProblemType {
+  _id: string,
   title: string;
   description: string;
   number: number;
   tags: Array<string>;
   comapany: Array<string>;
   level: string;
+  slug: string;
 }
 
 const Problems = () => {
@@ -57,11 +58,11 @@ const Problems = () => {
   };
 
   return (
-    <div className="m-32 flex justify-center mx-auto">
+    <div className="m-32  flex justify-center mx-auto">
       {/* <button onClick={getSolvedProblems}>Get Probs</button> */}
-      <table className="w-full text-center space-x-10">
-        <thead className="text-lg font-bold">
-          <tr>
+      <table className="w-full max-w-7xl text-center space-x-10 border p-3">
+        <thead className="text-lg font-bold p-2">
+          <tr className="p-3">
             <td>Status</td>
             <td>Number</td>
             <td>Title</td>
@@ -74,28 +75,35 @@ const Problems = () => {
             data.map((problem, idx) => {
               const difficulyColor =
                 problem.level === "easy"
-                  ? "text-dark-green-s"
+                  ? "text-green-400"
                   : problem.level === "medium"
-                  ? "text-dark-yellow"
-                  : "text-dark-red";
+                  ? "text-orange-400"
+                  : "text-red-400";
               return (
                 <tr
                   key={idx}
                   className={`${
-                    problem.number % 2 == 1 ? "bg-dark-layer-1" : ""
+                    problem.number % 2 == 1 ? "bg-stone-400" : ""
                   } m-2`}
                 >
                   <td className="p-5 text-center">
                     {/* No */}
-                    {user && solved?.includes(problem.number)===true ? <BsCheck />:<FaCross/>}
+                    {user && solved?.includes(problem.number) === true ? (
+                      <BsCheck />
+                    ) : (
+                      <FaCross />
+                    )}
                   </td>
                   <td>{problem.number}</td>
                   <td>
-                    <Link href={`/problems/${slugify(problem.title)}`}>
+                    <Link
+                      className="hover:text-blue-500"
+                      href={`/problems/${problem.slug}`}
+                    >
                       {problem.title}
                     </Link>
                   </td>
-                  <td>
+                  <td className="flex flex-wrap flex-row">
                     {problem.tags.map((tag, id) => {
                       return (
                         <span key={id} className="p-2 m-1 rounded">

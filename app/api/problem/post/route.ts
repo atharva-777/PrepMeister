@@ -1,6 +1,7 @@
 import { connect } from "@/dbConfig/dbConfig";
 import Question from "@/models/questionModel";
 import { NextRequest,NextResponse } from "next/server";
+import slugify from "slugify";
 
 export async function POST(req:NextRequest){
     try{
@@ -13,7 +14,8 @@ export async function POST(req:NextRequest){
             tags,
             company,
             number,
-            level
+            level,
+            slug : slugify(title,{lower:true})
         })
 
         const savedQuestion = await newQuestion.save();
