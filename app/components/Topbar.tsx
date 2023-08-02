@@ -24,15 +24,15 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
   const handleProblemChange = (isForward: boolean) => {};
 
   return (
-    <nav className="relative flex h-[50px] w-full shrink-0 items-center px-5 bg-dark-layer-1 text-dark-gray-7 m-4 p-2">
+    <nav className="relative flex h-[60px] w-full shrink-0 items-center px-5 bg-slate-900 text-white  p-4">
       <div
         className={`flex w-full items-center justify-between ${
           !problemPage ? "max-w-[1200px] mx-auto" : ""
         }`}
       >
         <Link href="/" className="h-[22px] flex-1">
-          {/* <h1 className="text-xl font-bold">PrepMeister</h1> */}
-          <Image src={'/assets/prepmeisterlogo.png'} width={200} height={200} alt=""/>
+          <h1 className="text-xl font-bold">PrepMeister</h1>
+          {/* <Image src={'/assets/prepmeisterlogo.png'} className="pb-2 bg-white" width={150} height={150} alt=""/> */}
         </Link>
 
         {problemPage && (
@@ -71,10 +71,10 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
           )}
           {user && problemPage && <Timer />}
           {user && (
-            <div className="cursor-pointer group relative pr-4">
+            <div className="cursor group relative pr-4">
               <Avatar
                 className="rounded-full"
-                size="50px"
+                size="40px"
                 name={user.username}
                 color={"green"}
               />

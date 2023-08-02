@@ -9,12 +9,11 @@ type WorkspaceProps = {
 
 const Workspace: React.FC<WorkspaceProps> = ({ slug }) => {
     return (
-    //   Problem : {slug}
-    <Split className="split">
-        <Description />
-        <Playground />
-    </Split>
-  );
+      <Split className="split">
+          <Description />
+          <Playground />
+      </Split>  
+    );
 };
 
 export default Workspace;
