@@ -15,6 +15,8 @@ type TopbarProps = {
   problemPage?: boolean;
 };
 
+let problem:ProblemType 
+
 const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
   const { user, setUser } = useContext<any>(UserContext);
   const router = useRouter();
@@ -42,7 +44,7 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
               <FaChevronLeft />
             </div>
             <Link
-              href="/"
+              href="/problems"
               className="flex items-center gap-2 font-medium max-w-[170px] text-dark-gray-8 cursor-pointer"
             >
               <div>
