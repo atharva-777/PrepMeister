@@ -9,7 +9,7 @@ const p: ProblemType = {
   number: 0,
   level: "",
   tags: [],
-  comapany: [],
+  company: [],
   slug: "",
 };
 
