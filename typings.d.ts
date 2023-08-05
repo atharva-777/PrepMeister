@@ -1,12 +1,10 @@
 interface ProblemType {
   _id: string;
   title: string;
-  description: string;
   number: number;
+  description: string;
   tags: Array<string>;
-  comapany: Array<string>;
+  company: Array<string>;
   level: string;
   slug: string;
-  likes: number;
-  dislikes: number;
 }
