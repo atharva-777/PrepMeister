@@ -7,12 +7,15 @@ type DescriptionProps = {
 const Description:React.FC<DescriptionProps> = ({problem}) => {
     
     return (
-      <div className="text-center m-8 text-lg font-bold h-screen">
+      <div className="text-center p-8  text-lg font-bold h-screen">
         Problem Description
-        <div className="text-md font-sans text-start">
+        <div className="text-md m-2 font-sans font-light text-start">
           <ul>
-            <li>{problem.title}</li>
-            <li>{problem.number}</li>
+            <li>
+              <span>
+              {problem.number}{". "}</span>
+              {problem.title}
+            </li>
             <li>{problem.description}</li>
             <li>{problem.level}</li>
             <li>{problem.slug}</li>
