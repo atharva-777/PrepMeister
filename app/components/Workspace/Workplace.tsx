@@ -30,7 +30,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ slug }) => {
     }, []);
 
     return (
-      <Split className="split">
+      <Split className="split" minSize={0}>
           <Description problem={problem}/>
           <Playground />
       </Split>  
