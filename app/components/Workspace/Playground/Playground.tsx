@@ -5,6 +5,7 @@ import { oneDarkTheme } from "@codemirror/theme-one-dark";
 import { cpp } from "@codemirror/lang-cpp";
 import Split from "react-split";
 import Preference from "./PreferenceBar/Preference";
+import EditorFooter from "./Footer/EditorFooter";
 
 type PlaygroundProps = {};
 
@@ -67,6 +68,7 @@ const Playground: React.FC<PlaygroundProps> = ({}) => {
           </div>
         </div>
       </Split>
+      <EditorFooter handleSubmit={handleSubmit}/>
     </div>
   );
 };
