@@ -6,8 +6,8 @@ import slugify from "slugify";
 export async function POST(req:NextRequest){
     try{
         const reqBody = await req.json()
-        const {title, description,tags,company,number,level} = reqBody
-
+        const {title, description,tags,company,number,level,examples} = reqBody
+        
         const newQuestion = new Question({
             title,
             description,
@@ -15,7 +15,8 @@ export async function POST(req:NextRequest){
             company,
             number,
             level,
-            slug : slugify(title,{lower:true})
+            slug : slugify(title,{lower:true}),
+            examples,
         })
 
         const savedQuestion = await newQuestion.save();

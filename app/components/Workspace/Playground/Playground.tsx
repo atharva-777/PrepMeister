@@ -11,6 +11,10 @@ type PlaygroundProps = {};
 
 const Playground: React.FC<PlaygroundProps> = ({}) => {
 
+  const boilerPlate = `function twoSum(nums,target){
+    // Write your code here
+  };`
+
 
     const handleSubmit = () => {
          
@@ -27,7 +31,7 @@ const Playground: React.FC<PlaygroundProps> = ({}) => {
       >
         <div className="w-full overflow-auto">
           <CodeMirror
-            value="const a = 1;"
+            value={boilerPlate}
             theme={oneDarkTheme}
             extensions={[javascript()]}
             style={{ fontSize: 16 }}

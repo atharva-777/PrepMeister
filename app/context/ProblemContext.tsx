@@ -11,6 +11,7 @@ const p: ProblemType = {
   tags: [],
   company: [],
   slug: "",
+  examples: [],
 };
 
 const ProblemContext = createContext({});

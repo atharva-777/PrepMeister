@@ -21,7 +21,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ slug }) => {
             slug: slug,
           });
           setProblem(p.data.problem);
-        //   console.log(problem)
+          console.log(problem)
         } catch (error: any) {
           console.log(error.message);
         }

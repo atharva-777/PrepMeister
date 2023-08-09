@@ -1,5 +1,17 @@
 import mongoose from "mongoose";
 
+const exampleSchema = new mongoose.Schema({
+  input: {
+    type: Array,
+  },
+  output: {
+    type: Array,
+  },
+  explaination: {
+    type: Array,
+  },
+});
+
 const questionSchema = new mongoose.Schema({
     title:{
         type: String,
@@ -27,8 +39,14 @@ const questionSchema = new mongoose.Schema({
         type: String,
         unique: true,
         slug: "title",
+    },
+    examples: {
+        type: [exampleSchema],
+        required: true,
     }
 })
+
+
 
 // questionSchema.pre('save',function(){
 //     this.slug = slugify(this.title,{lower:true});
