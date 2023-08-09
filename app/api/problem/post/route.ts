@@ -16,7 +16,7 @@ export async function POST(req:NextRequest){
             number,
             level,
             slug : slugify(title,{lower:true}),
-            examples,
+            examples: examples,
         })
 
         const savedQuestion = await newQuestion.save();

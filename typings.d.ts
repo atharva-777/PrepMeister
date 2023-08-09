@@ -1,8 +1,8 @@
-interface ExampleType {
-  input: Array<string>;
-  output: Array<string>;
-  explaination: Array<string>;
-}
+type Example = {
+  input: string;
+  output: string;
+  explaination: string;
+};
 
 interface ProblemType {
   _id: string;
@@ -13,5 +13,5 @@ interface ProblemType {
   company: Array<string>;
   level: string;
   slug: string;
-  examples : Array<ExampleType>;
+  examples : Array<Example>;
 }
