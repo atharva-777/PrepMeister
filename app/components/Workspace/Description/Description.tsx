@@ -26,8 +26,8 @@ const Description:React.FC<DescriptionProps> = ({problem}) => {
             <li>{problem.company[0]}</li>
           </ul>
           <div className="p-8 bg-slate-400">
-          
-          {problem.examples.map((example, key) => {
+          <h3 className="m-2">Examples</h3>
+          {problem.examples && problem.examples.map((example, key) => {
             return (
               <div key={key}>
                 <h2 className="m-2">Example : {key+1}</h2>
