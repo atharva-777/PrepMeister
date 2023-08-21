@@ -24,7 +24,7 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
   const handleProblemChange = (isForward: boolean) => {};
 
   return (
-    <nav className="relative flex h-[60px] w-full shrink-0 items-center px-5 bg-slate-900 text-white  p-4">
+    <nav className="flex h-[60px] w-full shrink-0 items-center px-5 relative  p-4 border overflow-hidden">
       <div
         className={`flex w-full items-center justify-between ${
           !problemPage ? "max-w-[1200px] mx-auto" : ""

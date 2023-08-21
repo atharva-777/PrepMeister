@@ -1,11 +1,16 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter,Poppins } from "next/font/google";
 import Navbar from "./components/Navbar";
 import { UserProvider } from "./context/UserProvider";
 import { ProblemProvider } from "./context/ProblemContext";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: "400"
+})
 
 export const metadata: Metadata = {
   title: "PrepMeister",
@@ -23,7 +28,7 @@ export default function RootLayout({
         <main>
           <UserProvider>
             <ProblemProvider>
-            <main>{children}</main>
+            <main className={poppins.className}>{children}</main>
             </ProblemProvider>
           </UserProvider>
         </main>
