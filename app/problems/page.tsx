@@ -10,6 +10,7 @@ import { FaCross } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import TestService from "../services/test";
 import { ITest } from "../interfaces/ITest";
+import {useQuery} from 'react-query'
 
 interface ProblemType {
   _id: string;
@@ -26,6 +27,8 @@ const Problems = () => {
   const [data, setData] = useState<ProblemType[]>();
   const { user, setUser } = useContext<any>(UserContext);
   const [solved, setSolved] = useState<number[]>();
+  const [problems,setProblems] = useState<ITest["data"]>();
+
   let ps: ProblemType[];
   const lim = 50;
   const getProblems = async () => {
@@ -39,10 +42,10 @@ const Problems = () => {
     }
   };
 
-  // useEffect(() => {
-  //   getProblems();
-  //   getSolvedProblems();
-  // }, [user]);
+  useEffect(() => { 
+    getProblems();
+    getSolvedProblems();
+  }, [user]);
 
   const getSolvedProblems = async () => {
     try {
@@ -62,8 +65,9 @@ const Problems = () => {
   const handleReq = async () => {
     console.log("here")
     const res = await TestService.getProblems<ITest>(10)
-    .then(({  })=>{
-      console.log("data ",data)
+    .then(({ data})=>{
+      setProblems(data)
+      console.log("data ", problems);
     })
     
     
@@ -74,7 +78,7 @@ const Problems = () => {
       <Navbar />
       <div className="mt-24 flex justify-center mx-auto">
         <button onClick={handleReq}>Get All Problems</button>
-        {/* <table className="w-full max-w-7xl text-center space-x-10 border p-3">
+        <table className="w-full max-w-7xl text-center space-x-10 border p-3">
           <thead className="text-lg font-bold p-2">
             <tr className="p-3">
               <td>Status</td>
@@ -132,7 +136,7 @@ const Problems = () => {
                 );
               })}
           </tbody>
-        </table> */}
+        </table>
       </div>
     </div>
   );

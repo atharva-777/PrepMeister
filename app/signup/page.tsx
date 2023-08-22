@@ -50,7 +50,7 @@ function SignUp() {
     }
   };
   return (
-    <div className="text-center justify-center items-center mt-40">
+    <div className="text-center justify-center items-center h-screen flex flex-col">
       <Toaster />
 
       <h1 className="text-3xl font-bold p-2">Signup</h1>
