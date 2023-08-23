@@ -21,7 +21,7 @@ const Playground: React.FC<PlaygroundProps> = ({}) => {
     }
 
   return (
-    <div className="flex flex-col bg-black text-white relative overflow-x-hidden">
+    <div className="flex flex-col bg-black text-white relative overflow-hidden">
       <Preference />
       <Split
         className="h-[calc(100vh-94px)]"

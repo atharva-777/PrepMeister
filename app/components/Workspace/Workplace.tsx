@@ -27,7 +27,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ slug }) => {
         }
       };
       getProblem(slug);
-    }, []);
+    }, [setProblem, slug]);
 
     return (
       <Split className="split" minSize={0}>

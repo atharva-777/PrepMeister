@@ -7,7 +7,8 @@ type ProblemPageProps = {};
 
 const ProblemPage: React.FC<ProblemPageProps> = ({ params }: any) => {
   return (
-    <div>
+    // <div className="h-screen overflow-hidden">
+    <div className="h-screen">
       <Topbar problemPage={true} />
       <Workspace slug={params.id}/>
     </div>

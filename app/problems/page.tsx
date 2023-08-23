@@ -41,26 +41,26 @@ const Problems = () => {
       console.log(error.message);
     }
   };
+  
+    const getSolvedProblems = async () => {
+      try {
+        if (!user) {
+          return null;
+        }
+        const data = await axios.post("/api/users/getSolved", {
+          email: user.email,
+        });
+        setSolved(data.data.record[0].solved);
+      } catch (error: any) {
+        console.log(error.message);
+        console.log("error");
+      }
+    };
 
   useEffect(() => { 
     getProblems();
     getSolvedProblems();
   }, [user]);
-
-  const getSolvedProblems = async () => {
-    try {
-      if (!user) {
-        return null;
-      }
-      const data = await axios.post("/api/users/getSolved", {
-        email: user.email,
-      });
-      setSolved(data.data.record[0].solved);
-    } catch (error: any) {
-      console.log(error.message);
-      console.log("error");
-    }
-  };
 
   const handleReq = async () => {
     console.log("here")
