@@ -10,6 +10,7 @@ export default function ProblemLayout({
   return (
     <section>
         <main>
+          {/* <Navbar/> */}
             {/* <Topbar problemPage={true}/> */}
             <main>
 

@@ -1,7 +1,8 @@
 import React from "react";
 import CodeMirror from "@uiw/react-codemirror";
-import { javascript } from "@codemirror/lang-javascript";
 import { oneDarkTheme } from "@codemirror/theme-one-dark";
+import {githubDark} from '@uiw/codemirror-theme-github'
+import { javascript } from "@codemirror/lang-javascript";
 import { cpp } from "@codemirror/lang-cpp";
 import Split from "react-split";
 import Preference from "./PreferenceBar/Preference";
@@ -10,15 +11,18 @@ import EditorFooter from "./Footer/EditorFooter";
 type PlaygroundProps = {};
 
 const Playground: React.FC<PlaygroundProps> = ({}) => {
-
   const boilerPlate = `function twoSum(nums,target){
     // Write your code here
-  };`
+  };`;
 
-
-    const handleSubmit = () => {
-         
+  const bp = `class Solution {
+public:
+    vector<string> fullJustify(vector<string>& words, int maxWidth) {
+        
     }
+};`;
+
+  const handleSubmit = () => {};
 
   return (
     <div className="flex flex-col bg-black text-white relative overflow-hidden">
@@ -32,7 +36,7 @@ const Playground: React.FC<PlaygroundProps> = ({}) => {
         <div className="w-full overflow-auto">
           <CodeMirror
             value={boilerPlate}
-            theme={oneDarkTheme}
+            theme={githubDark}
             extensions={[javascript()]}
             style={{ fontSize: 16 }}
           />
@@ -72,7 +76,7 @@ const Playground: React.FC<PlaygroundProps> = ({}) => {
           </div>
         </div>
       </Split>
-      <EditorFooter handleSubmit={handleSubmit}/>
+      <EditorFooter handleSubmit={handleSubmit} />
     </div>
   );
 };

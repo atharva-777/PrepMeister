@@ -11,6 +11,7 @@ import Navbar from "../components/Navbar";
 import TestService from "../services/test";
 import { ITest } from "../interfaces/ITest";
 import {useQuery} from 'react-query'
+import { api } from "../config/axios";
 
 interface ProblemType {
   _id: string;
@@ -28,6 +29,7 @@ const Problems = () => {
   const { user, setUser } = useContext<any>(UserContext);
   const [solved, setSolved] = useState<number[]>();
   const [problems,setProblems] = useState<ITest["data"]>();
+  const [loaded,setLoaded] = useState<boolean>(false);
 
   let ps: ProblemType[];
   const lim = 50;
@@ -61,6 +63,21 @@ const Problems = () => {
     getProblems();
     getSolvedProblems();
   }, [user]);
+
+  const {isLoading,error,isFetched} = useQuery({
+    // queryKey:["problem"],
+    queryFn: async ()=> {
+      const res = await TestService.getProblems<ITest>(lim);
+      setLoaded(true)
+    }
+    ,enabled: loaded?false:true
+})
+  if(isLoading){
+    console.log('loading data')
+  }
+  if(isFetched){
+    console.log("data received")
+  }
 
   const handleReq = async () => {
     console.log("here")

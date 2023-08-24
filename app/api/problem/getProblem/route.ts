@@ -13,7 +13,6 @@ export async function POST(req: NextRequest) {
         if(!problem){
             return NextResponse.json({message:"Problem not found",status:false},{status:400});
         }
-
         return NextResponse.json({problem},{status:200})
 
     }catch(error:any){

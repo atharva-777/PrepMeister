@@ -32,7 +32,7 @@ const Timer: React.FC<TimerProps> = () => {
   return (
     <div>
       {showTimer ? (
-        <div className="flex items-center space-x-2 bg-stone-400 p-2 cursor-pointer rounded hover:bg-slate-600">
+        <div className="flex items-center space-x-2 bg-stone-400 p-2 cursor-pointer rounded hover:bg-slate-200">
           <div
             onClick={() => {
               setShowTimer(false);
@@ -45,7 +45,7 @@ const Timer: React.FC<TimerProps> = () => {
         </div>
       ) : (
         <div
-          className="flex items-center p-2 hover:bg-slate-600 rounded cursor-pointer"
+          className="flex items-center p-2 hover:bg-slate-200 rounded cursor-pointer"
           onClick={() => {
             setShowTimer(true);
             setSeconds(0);
