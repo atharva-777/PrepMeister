@@ -2,7 +2,6 @@ import { api } from "../config/axios";
 
 class ProblemService {
   static async getSingleProblem(slug: String) {
-    console.log(slug)
     const res = await api.post("/problem/getProblem", slug);
     console.log("res  ");
     return res.data;

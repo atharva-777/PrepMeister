@@ -6,8 +6,7 @@ import Split from "react-split";
 import { ProblemContext } from "@/app/context/ProblemContext";
 import axios from "axios";
 import { useQuery } from "react-query";
-import ProblemService from "@/app/services/problem";
-import { api } from "@/app/config/axios";
+import ProblemService from "@/app/services/problem.service";
 
 type WorkspaceProps = {
     slug: String;
@@ -17,18 +16,18 @@ const Workspace: React.FC<WorkspaceProps> = ({ slug }) => {
 
     const { problem, setProblem } = useContext<any>(ProblemContext);
 
-    const { isFetched, isLoading, error,data } = useQuery({
-      queryKey: ["problem"],
-      queryFn: async () => {
-        const res = await ProblemService.getSingleProblem(slug);
-        return res.data
-      },
-    });
-
-    if(isFetched){
-      console.log('fetched ')
-      console.log("data",data)
-    }
+    const {data,isLoading} = useQuery(
+      ["problem"],
+      () => ProblemService.getSingleProblem(slug),
+      {
+        onSuccess(data) {
+            console.log("data",data)
+        },
+        onError(err) {
+            console.log("error occured")
+        },
+      }
+    )
     
 
     useEffect(() => {
