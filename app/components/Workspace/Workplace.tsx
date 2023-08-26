@@ -21,6 +21,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ slug }) => {
       () => ProblemService.getSingleProblem(slug),
       {
         onSuccess(data) {
+          setProblem(data)
             console.log("data",data)
         },
         onError(err) {
