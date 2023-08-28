@@ -1,4 +1,5 @@
 "use client";
+import axios from 'axios';
 import {createContext,useState } from 'react'
 import React from 'react'
 
@@ -10,13 +11,22 @@ interface UserData {
   email?: string;
 }
 
+
+
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<UserData| null >(null);
-//   const add = (username:string, email:string) =>{
-//     setUser({username:username,email:email});
-//   }
+
+  const getUserDetails = async () => {
+    const res = await axios.get("/api/users/me");
+    setUser({
+      id: res.data.data._id,
+      username: res.data.data.username,
+      email: res.data.data.email,
+    });
+  };
+
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser,getUserDetails }}>
       {children}
     </UserContext.Provider>
   );

@@ -7,6 +7,7 @@ import { ProblemContext } from "@/app/context/ProblemContext";
 import axios from "axios";
 import { useQuery } from "react-query";
 import ProblemService from "@/app/services/problem.service";
+import { UserContext } from "@/app/context/UserProvider";
 
 type WorkspaceProps = {
     slug: String;

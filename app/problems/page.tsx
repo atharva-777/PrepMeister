@@ -10,7 +10,7 @@ import { FaCross } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import TestService from "../services/test";
 import { ITest } from "../interfaces/ITest";
-import {useQuery} from 'react-query'
+import { useQuery } from "react-query";
 import { api } from "../config/axios";
 
 interface ProblemType {
@@ -28,8 +28,8 @@ const Problems = () => {
   const [data, setData] = useState<ProblemType[]>();
   const { user, setUser } = useContext<any>(UserContext);
   const [solved, setSolved] = useState<number[]>();
-  const [problems,setProblems] = useState<ITest["data"]>();
-  const [loaded,setLoaded] = useState<boolean>(false);
+  const [problems, setProblems] = useState<ITest["data"]>();
+  const [loaded, setLoaded] = useState<boolean>(false);
 
   let ps: ProblemType[];
   const lim = 50;
@@ -43,58 +43,54 @@ const Problems = () => {
       console.log(error.message);
     }
   };
-  
-    const getSolvedProblems = async () => {
-      try {
-        if (!user) {
-          return null;
-        }
-        const data = await axios.post("/api/users/getSolved", {
-          email: user.email,
-        });
-        setSolved(data.data.record[0].solved);
-      } catch (error: any) {
-        console.log(error.message);
-        console.log("error");
-      }
-    };
 
-  useEffect(() => { 
+  const getSolvedProblems = async () => {
+    try {
+      if (!user) {
+        return null;
+      }
+      const data = await axios.post("/api/users/getSolved", {
+        email: user.email,
+      });
+      setSolved(data.data.record[0].solved);
+    } catch (error: any) {
+      console.log(error.message);
+      console.log("error");
+    }
+  };
+
+  useEffect(() => {
     getProblems();
     getSolvedProblems();
   }, [user]);
 
-  const {isLoading,error,isFetched} = useQuery({
+  const { isLoading, error, isFetched } = useQuery({
     // queryKey:["problem"],
-    queryFn: async ()=> {
+    queryFn: async () => {
       const res = await TestService.getProblems<ITest>(lim);
-      setLoaded(true)
-    }
-    ,enabled: loaded?false:true
-})
-  if(isLoading){
-    console.log('loading data')
+      setLoaded(true);
+    },
+    enabled: loaded ? false : true,
+  });
+  if (isLoading) {
+    console.log("loading data");
   }
-  if(isFetched){
-    console.log("data received")
+  if (isFetched) {
+    console.log("data received");
   }
 
   const handleReq = async () => {
-    console.log("here")
-    const res = await TestService.getProblems<ITest>(10)
-    .then(({ data})=>{
-      setProblems(data)
+    console.log("here");
+    const res = await TestService.getProblems<ITest>(10).then(({ data }) => {
+      setProblems(data);
       console.log("data ", problems);
-    })
-    
-    
-  }
+    });
+  };
 
   return (
     <div>
       <Navbar />
       <div className="mt-24 flex justify-center mx-auto">
-        <button onClick={handleReq}>Get All Problems</button>
         <table className="w-full max-w-7xl text-center space-x-10 border p-3">
           <thead className="text-lg font-bold p-2">
             <tr className="p-3">
