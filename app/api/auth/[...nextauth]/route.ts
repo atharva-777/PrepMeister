@@ -1,4 +1,6 @@
-import Auth from "@/app/services/auth.service";
+import { api } from "@/app/config/axios";
+import AuthService from "@/app/services/auth.service";
+import { AxiosError } from "axios";
 import NextAuth from "next-auth";
 import type { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -7,28 +9,34 @@ export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
+
       credentials: {
-        email: { label: "Email", type: "text" },
+        email: {
+          label: "Email",
+          type: "email",
+        },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
-        if (typeof credentials !== "undefined") {
-          const res = await Auth.authenticate(
-            credentials.email,
-            credentials.password
+
+      async authorize(credentials) {
+        try {
+          const res = AuthService.login(
+            {email:credentials?.email,
+            password:credentials?.password}
           );
-          if (typeof res !== "undefined") {
-            return { ...res.user, apiToken: res.token };
+          return res;
+        } catch (err:any) {
+          if (err instanceof AxiosError) {
+            throw new Error(err.response?.data.error.message);
           } else {
-            return null;
+            throw new Error(err);
           }
-        } else {
-          return null;
         }
       },
     }),
   ],
   session: { strategy: "jwt" },
+  
 };
 
 const handler = NextAuth(authOptions);

@@ -3,7 +3,6 @@ import { api } from "../config/axios";
 class ProblemService {
   static async getSingleProblem(slug: String) {
     const res = await api.post("/problem/getProblem", slug);
-    console.log("res  ");
     return res.data;
   }
   static async getAllProblem(lim:number){

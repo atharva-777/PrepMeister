@@ -1,12 +1,10 @@
 import { api } from "../config/axios";
 
-class Auth{
-    static async authenticate(email:string, password:string){
-        return JSON.stringify({
-            user:"Atharva",
-            token: "sd"
-        })
-    }
+class AuthService {
+  static async login(data:any) {
+    const res = await api.post("/users/login",data);
+    return res.data;
+  }
 }
 
-export default Auth;
+export default AuthService;
