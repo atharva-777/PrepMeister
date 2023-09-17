@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import toast,{Toaster} from 'react-hot-toast'
 import { useRouter } from "next/navigation";
+import {signIn} from 'next-auth/react'
 
 function SignUp() {
   const router = useRouter();
@@ -33,18 +34,11 @@ function SignUp() {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      // const data = await axios.post('/api/users/signup',user);
-      //  const resp = await fetch("/api/users/signup", {
-      //    method: "POST",
-      //    body: JSON.stringify(user),
-      //  });
-      // console.log(resp)
-      const data = await axios({method : 'POST',url:'/api/users/signup',data:user})
-      // console.log(data)
-      toast.success('User saved Successfully')
-      setTimeout(() => {
-        router.push('/login')
-      }, 2000);
+      signIn('credentials',{
+        ...user,
+        redirect: false
+      })
+      router.push('/login')
     } catch (error:any) {
       toast.error('User already exists')
     }
