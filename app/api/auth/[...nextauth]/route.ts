@@ -1,4 +1,3 @@
-import { api } from "@/app/config/axios";
 import AuthService from "@/app/services/auth.service";
 import { AxiosError } from "axios";
 import NextAuth from "next-auth";
@@ -24,6 +23,7 @@ export const authOptions: AuthOptions = {
             {email:credentials?.email,
             password:credentials?.password}
           );
+          console.log(res)
           return res;
         } catch (err:any) {
           if (err instanceof AxiosError) {
@@ -37,7 +37,10 @@ export const authOptions: AuthOptions = {
   ],
   session: { strategy: "jwt" },
   secret: process.env.NEXTAUTH_SECRET,
-  debug: true
+  debug: true,
+  pages: {
+    signIn: '/login',
+  }
 };
 
 const handler = NextAuth(authOptions);

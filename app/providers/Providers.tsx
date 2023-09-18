@@ -9,12 +9,13 @@ const client = new QueryClient();
 
 type ProviderProps = {
   children: React.ReactNode;
+  session: any;
 };
 
-const Providers: React.FC<ProviderProps> = ({ children }) => {
+const Providers: React.FC<ProviderProps> = ({ children,session }) => {
   return (
     <>
-      <SessionProvider>
+      <SessionProvider session={session}>
         <UserProvider>
           <ProblemProvider>
             <QueryClientProvider client={client}>

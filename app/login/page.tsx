@@ -35,7 +35,7 @@ const Login = () => {
       const res = await axios.get("/api/users/me");
       setUser({username:res.data.data.username,email:res.data.data.email});
       setTimeout(() => {
-        router.push('/profile')
+        router.push('/problems')
       }, 2000);
     }catch(error){
       console.log(error)

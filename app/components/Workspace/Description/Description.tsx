@@ -11,9 +11,9 @@ const Description: React.FC<DescriptionProps> = ({ problem }) => {
     <div className="h-screen overflow-auto flex-1">
       <div className="text-md m-2 font-sans font-light text-start">
         {/* overall description */}
-        <div className="flex flex-row">
+        <div className="flex flex-col">
           {/* title */}
-          <div className="text-xl hover:font-bold font-medium flex flex-row justify-end">
+          <div className="text-xl hover:font-bold font-medium flex flex-row">
             <div>
               {problem.number} {problem.title}
             </div>
