@@ -1,9 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
-import { oneDarkTheme } from "@codemirror/theme-one-dark";
 import {githubDark} from '@uiw/codemirror-theme-github'
 import { javascript } from "@codemirror/lang-javascript";
-import { cpp } from "@codemirror/lang-cpp";
 import Split from "react-split";
 import Preference from "./PreferenceBar/Preference";
 import EditorFooter from "./Footer/EditorFooter";
@@ -11,16 +9,13 @@ import EditorFooter from "./Footer/EditorFooter";
 type PlaygroundProps = {};
 
 const Playground: React.FC<PlaygroundProps> = ({}) => {
+
   const boilerPlate = `function twoSum(nums,target){
     // Write your code here
   };`;
+  
+  let [userCode,setUserCode] = useState<string>(boilerPlate);
 
-  const bp = `class Solution {
-public:
-    vector<string> fullJustify(vector<string>& words, int maxWidth) {
-        
-    }
-};`;
 
   const handleSubmit = () => {};
 

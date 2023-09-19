@@ -1,5 +1,4 @@
 import React from "react";
-import { FiThumbsDown, FiThumbsUp } from "react-icons/fi";
 import { TbCircleCheckFilled } from "react-icons/tb";
 
 type DescriptionProps = {
