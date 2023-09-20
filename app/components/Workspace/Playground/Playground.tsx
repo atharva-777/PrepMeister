@@ -6,7 +6,10 @@ import Split from "react-split";
 import Preference from "./PreferenceBar/Preference";
 import EditorFooter from "./Footer/EditorFooter";
 
-type PlaygroundProps = {};
+type PlaygroundProps = {
+  language : string;
+  theme : string;
+};
 
 const Playground: React.FC<PlaygroundProps> = ({}) => {
 
@@ -15,6 +18,10 @@ const Playground: React.FC<PlaygroundProps> = ({}) => {
   };`;
   
   let [userCode,setUserCode] = useState<string>(boilerPlate);
+
+  const selectLanguage = (sl:string) => {
+    selectLanguage(sl);
+  }
 
 
   const handleSubmit = () => {};

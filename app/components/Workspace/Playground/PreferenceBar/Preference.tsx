@@ -5,6 +5,7 @@ import {
   AiOutlineFullscreen,
   AiOutlineFullscreenExit,
 } from "react-icons/ai";
+import { languageOptions } from "@/constants/languageOptions";
 
 const Preference = () => {
   const [isOpen, setIsOpen] = useState(false);
