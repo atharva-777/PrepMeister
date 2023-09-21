@@ -39,7 +39,7 @@ const Playground: React.FC<PlaygroundProps> = ({}) => {
           <CodeMirror
             value={boilerPlate}
             theme={githubDark}
-            extensions={[javascript()]}
+            extensions={[javascript({jsx:true})]}
             style={{ fontSize: 16 }}
           />
         </div>
