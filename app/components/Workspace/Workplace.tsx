@@ -7,6 +7,7 @@ import { ProblemContext } from "@/app/context/ProblemContext";
 import axios from "axios";
 import { useQuery } from "react-query";
 import ProblemService from "@/app/services/problem.service";
+import { useSession } from "next-auth/react";
 
 type WorkspaceProps = {
     slug: String;
@@ -14,8 +15,10 @@ type WorkspaceProps = {
 
 const Workspace: React.FC<WorkspaceProps> = ({ slug }) => {
 
-    const { problem, setProblem } = useContext<any>(ProblemContext);
+  const user = useSession();
 
+    const { problem, setProblem } = useContext<any>(ProblemContext);
+    
     const {data,isLoading} = useQuery(
       ["problem"],
       () => ProblemService.getSingleProblem(slug),
@@ -38,7 +41,6 @@ const Workspace: React.FC<WorkspaceProps> = ({ slug }) => {
             slug: slug,
           });
           setProblem(p.data.problem);
-          // console.log("res ",problem)
         } catch (error: any) {
           console.log(error.message);
         }
@@ -49,7 +51,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ slug }) => {
     return (
       <Split className="split" minSize={0}>
           <Description problem={problem}/>
-          <Playground />
+          <Playground problem={problem}/>
       </Split>  
     );
 };

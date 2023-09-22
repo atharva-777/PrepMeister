@@ -7,8 +7,9 @@ import Preference from "./PreferenceBar/Preference";
 import EditorFooter from "./Footer/EditorFooter";
 
 type PlaygroundProps = {
-  language : string;
-  theme : string;
+  // language : string;
+  // theme : string;
+  problem : ProblemType;
 };
 
 const Playground: React.FC<PlaygroundProps> = ({}) => {
@@ -24,7 +25,9 @@ const Playground: React.FC<PlaygroundProps> = ({}) => {
   }
 
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    // Judge0 api 
+  };
 
   return (
     <div className="flex flex-col bg-black text-white relative overflow-hidden">
