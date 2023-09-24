@@ -6,13 +6,10 @@ import { cpp } from "@codemirror/lang-cpp";
 import Split from "react-split";
 import Preference from "./PreferenceBar/Preference";
 import EditorFooter from "./Footer/EditorFooter";
-import { ViewUpdate } from "@codemirror/view";
 import { api } from "@/app/config/axios";
 import { toast } from "react-hot-toast";
 
 type PlaygroundProps = {
-  // language : string;
-  // theme : string;
   problem: ProblemType;
 };
 

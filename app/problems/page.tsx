@@ -11,7 +11,6 @@ import Navbar from "../components/Navbar";
 import TestService from "../services/test";
 import { ITest } from "../interfaces/ITest";
 import { useQuery } from "react-query";
-import { api } from "../config/axios";
 
 interface ProblemType {
   _id: string;
