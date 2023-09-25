@@ -9,7 +9,7 @@ import { languageOptions } from "@/constants/languageOptions";
 
 const Preference = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [language, setLanguage] = useState("javascript");
+  const [language, setLanguage] = useState<string>("Javascript");
 
   const [isFullScreen, setIsFullScreen] = useState(false);
 
@@ -22,7 +22,7 @@ const Preference = () => {
     setIsFullScreen(!isFullScreen);
   };
 
-  const handleLanguage = (language: string) => {
+  const handleLanguage = (language: any) => {
     setLanguage(language);
     toggleDropdown();
   };
@@ -37,6 +37,16 @@ const Preference = () => {
         <button onClick={toggleDropdown} className="rounded-md">
           {language}
         </button>
+        {languageOptions.map((lang,key)=>{
+          return (
+            <div key={key}>
+              <li onClick={()=>{setLanguage(lang.name)}}>
+
+              {lang.name}
+              </li>
+              </div>
+          )
+        })}
         {isOpen && (
           <ul className="z-50 absolute top-8 left-0 bg-black shadow-md w-40">
             <li
