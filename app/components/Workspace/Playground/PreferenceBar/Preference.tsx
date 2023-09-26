@@ -6,8 +6,17 @@ import {
   AiOutlineFullscreenExit,
 } from "react-icons/ai";
 import { languageOptions } from "@/constants/languageOptions";
+import Modal from "@/app/components/CustomModal/Modal";
 
-const Preference = () => {
+function Preference() {
+  return (
+    <div>
+      <Modal children={PreferenceBar} open={false} />
+    </div>
+  );
+}
+
+const PreferenceBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [language, setLanguage] = useState<string>("Javascript");
 
@@ -68,9 +77,6 @@ const Preference = () => {
       <div className="flex items-center m-2">
         <button
           className="preferenceBtn group"
-          // onClick={() =>
-          //   setSettings({ ...settings, settingsModalIsOpen: true })
-          // }
         >
           <div className="h-4 w-4 text-dark-gray-6 font-bold text-lg">
             <AiOutlineSetting />
@@ -89,9 +95,6 @@ const Preference = () => {
             <div className="preferenceBtn-tooltip">Full Screen</div>
           </button>
       </div>
-      {/* {settings.settingsModalIsOpen && (
-          <SettingsModal settings={settings} setSettings={setSettings} />
-        )} */}
     </div>
   );
 };
