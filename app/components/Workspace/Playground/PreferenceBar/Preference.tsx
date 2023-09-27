@@ -11,14 +11,18 @@ import Modal from "@/app/components/CustomModal/Modal";
 function Preference() {
   return (
     <div>
-      <Modal children={PreferenceBar} open={false} />
+      <Modal children={PreferenceBar} open={false}/>
     </div>
   );
 }
 
-const PreferenceBar = () => {
+type PreferenceBarProps = {
+  handleLanguage: () => void;
+};
+
+const PreferenceBar:React.FC<PreferenceBarProps> = ({handleLanguage}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [language, setLanguage] = useState<string>("Javascript");
+  let language = "Javascript";
 
   const [isFullScreen, setIsFullScreen] = useState(false);
 
@@ -29,11 +33,6 @@ const PreferenceBar = () => {
       document.documentElement.requestFullscreen();
     }
     setIsFullScreen(!isFullScreen);
-  };
-
-  const handleLanguage = (language: any) => {
-    setLanguage(language);
-    toggleDropdown();
   };
 
   const toggleDropdown = () => {
@@ -49,7 +48,7 @@ const PreferenceBar = () => {
         {languageOptions.map((lang,key)=>{
           return (
             <div key={key}>
-              <li onClick={()=>{setLanguage(lang.name)}}>
+              <li onClick={()=>{handleLanguage(lang.name)}}>
 
               {lang.name}
               </li>
@@ -99,4 +98,4 @@ const PreferenceBar = () => {
   );
 };
 
-export default Preference;
+export default PreferenceBar;

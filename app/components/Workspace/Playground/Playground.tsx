@@ -4,7 +4,7 @@ import { githubDark } from "@uiw/codemirror-theme-github";
 import { javascript } from "@codemirror/lang-javascript";
 import { cpp } from "@codemirror/lang-cpp";
 import Split from "react-split";
-import Preference from "./PreferenceBar/Preference";
+import PreferenceBar from "./PreferenceBar/Preference";
 import EditorFooter from "./Footer/EditorFooter";
 import { api } from "@/app/config/axios";
 import { toast } from "react-hot-toast";
@@ -23,6 +23,7 @@ const Playground: React.FC<PlaygroundProps> = ({}) => {
 
   const selectLanguage = (sl: string) => {
     selectLanguage(sl);
+    return;
   };
 
   const extensions = [cpp()];
@@ -82,7 +83,7 @@ const Playground: React.FC<PlaygroundProps> = ({}) => {
 
   return (
     <div className="flex flex-col bg-black text-white relative overflow-hidden">
-      <Preference />
+      <PreferenceBar handleLanguage={selectLanguage} />
       <Split
         className="h-[calc(100vh-94px)]"
         direction="vertical"
