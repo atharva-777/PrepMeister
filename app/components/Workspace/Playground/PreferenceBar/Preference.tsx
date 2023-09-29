@@ -8,16 +8,16 @@ import {
 import { languageOptions } from "@/constants/languageOptions";
 import Modal from "@/app/components/CustomModal/Modal";
 
-function Preference() {
-  return (
-    <div>
-      <Modal children={PreferenceBar} open={false}/>
-    </div>
-  );
-}
+// function Preference() {
+//   return (
+//     <div>
+//       <Modal children={PreferenceBar} open={false}/>
+//     </div>
+//   );
+// }
 
 type PreferenceBarProps = {
-  handleLanguage: () => void;
+  handleLanguage: (sl:string) => void;
 };
 
 const PreferenceBar:React.FC<PreferenceBarProps> = ({handleLanguage}) => {
