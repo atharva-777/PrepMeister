@@ -135,7 +135,7 @@ const Playground: React.FC<PlaygroundProps> = ({}) => {
           </div>
         </div>
       </Split>
-      <EditorFooter handleSubmit={handleSubmit} />
+      <EditorFooter handleSubmit={handleSubmit} handleCompile={handleCompile}/>
     </div>
   );
 };
