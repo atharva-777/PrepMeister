@@ -12,18 +12,18 @@ type PreferenceBarProps = {
   handleLanguage: (sl:string) => void;
 };
 
+// const PreferenceBar:React.FC<PreferenceBarProps> = ({handleLanguage}) => {
+//   return (
+//     <div>
+//       <Modal open={true}>
+//         <Preference handleLanguage={handleLanguage}/>
+//       </Modal>
+//     </div>
+//   );
+// }
+
+
 const PreferenceBar:React.FC<PreferenceBarProps> = ({handleLanguage}) => {
-  return (
-    <div>
-      <Modal open={true}>
-        <Preference handleLanguage={handleLanguage}/>
-      </Modal>
-    </div>
-  );
-}
-
-
-const Preference:React.FC<PreferenceBarProps> = ({handleLanguage}) => {
   const [isOpen, setIsOpen] = useState(false);
   let language = "Javascript";
 
@@ -43,7 +43,7 @@ const Preference:React.FC<PreferenceBarProps> = ({handleLanguage}) => {
   };
 
   return (
-    <div className="flex items-center justify-between bg-dark-layer-2 h-11 w-full ">
+    <div className="flex items-center justify-between bg-dark-layer-2 h-11 w-full "> 
       <div className="relative px-4">
         <button onClick={toggleDropdown} className="rounded-md">
           {language}
@@ -51,10 +51,10 @@ const Preference:React.FC<PreferenceBarProps> = ({handleLanguage}) => {
         {languageOptions.map((lang,key)=>{
           return (
             <div key={key}>
-              <li onClick={()=>{handleLanguage(lang.name)}}>
+              {/* <li onClick={()=>{handleLanguage(lang.name)}}>
 
               {lang.name}
-              </li>
+              </li> */}
               </div>
           )
         })}
@@ -62,8 +62,8 @@ const Preference:React.FC<PreferenceBarProps> = ({handleLanguage}) => {
           <ul className="z-50 absolute top-8 left-0 bg-black shadow-md w-40">
             <li
               className="py-2 px-4 hover:bg-blue-400 cursor-pointer"
-              onClick={() => handleLanguage("javascript")}
-            >
+                onClick={() => handleLanguage("javascript")}
+              >
               Javascript
             </li>
             <li
