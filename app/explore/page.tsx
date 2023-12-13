@@ -2,6 +2,7 @@
 import React,{useEffect,useState} from 'react'
 import { api } from '../config/axios'
 import axios from 'axios'
+import { useSession } from 'next-auth/react';
 
 interface User{
     name:string;
@@ -9,6 +10,10 @@ interface User{
 }
 
 const Explore = () => {
+
+  const {data:session} = useSession();
+  const user = session?.user;
+  console.log("user ", user);
 
     const [userInfo,setUserInfo] = useState<User>();
 

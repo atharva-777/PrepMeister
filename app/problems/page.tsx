@@ -88,7 +88,7 @@ const Problems = () => {
 
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="mt-24 flex justify-center mx-auto">
         <table className="w-full max-w-7xl text-center space-x-10 border p-10">
           <thead className="text-lg font-bold p-2">

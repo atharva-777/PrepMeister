@@ -28,7 +28,7 @@ export default async function RootLayout({
       <body className={inter.className}>
         <main>
           <Providers session={session}>
-            {/* <Navbar/> */}
+            <Navbar/>
             <main className={poppins.className}>{children}</main>
           </Providers>
         </main>

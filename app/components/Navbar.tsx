@@ -1,14 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { useContext } from "react";
-import { UserContext } from "../context/UserProvider";
 import { TbUserCircle } from "react-icons/tb";
 import { AiOutlineLogout } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
+import { useSession, signOut } from "next-auth/react";
 
 const Navbar = () => {
-  const { user, setUser } = useContext<any>(UserContext);
+  const { data: session } = useSession();
+  const user = session?.user;
 
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 
@@ -25,9 +25,23 @@ const Navbar = () => {
         <div>
           <Link href={"/problems"}>Problems</Link>
         </div>
-        {/* <div>Problems</div> */}
         <div>Discussion</div>
         <div>Groups</div>
+
+        {!user && (
+          <>
+            <li>
+              <Link href="/login" className="text-ct-dark-600">
+                Login
+              </Link>
+            </li>
+            <li>
+              <Link href="/signup" className="text-ct-dark-600">
+                Register
+              </Link>
+            </li>
+          </>
+        )}
 
         {user && (
           <div className="cursor-pointer group relative" id="pr">
@@ -48,7 +62,7 @@ const Navbar = () => {
                     </li>
                   </Link>
                   <li
-                    // onClick={logout}
+                    onClick={() => signOut()}
                     className="px-4 py-2 cursor-pointer flex items-center space-x-2 hover:bg-gray-100"
                   >
                     <AiOutlineLogout size={20} />
