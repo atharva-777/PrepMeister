@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import toast,{Toaster} from 'react-hot-toast'
 import { useRouter } from "next/navigation";
 import {signIn} from 'next-auth/react'
+import AuthService from "../services/auth.service";
 
 function SignUp() {
   const router = useRouter();
@@ -34,13 +35,14 @@ function SignUp() {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      signIn('credentials',{
-        ...user,
-        redirect: false
-      })
-      router.push('/login')
+      console.log("Req happend")
+      // const res = await AuthService.signup(user);
+      
+      const res = await axios.post("/api/users/signup", { ...user });
+      console.log(res.data)
     } catch (error:any) {
-      toast.error('User already exists')
+      // console.log("Error",error)
+      toast.error('Something unexpected occured')
     }
   };
   return (

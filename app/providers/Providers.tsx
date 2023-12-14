@@ -10,21 +10,20 @@ const client = new QueryClient();
 
 type ProviderProps = {
   children: React.ReactNode;
-  session: any;
 };
 
-const Providers: React.FC<ProviderProps> = ({ children,session }) => {
+const Providers: React.FC<ProviderProps> = ({ children }) => {
   return (
     <>
     <Toaster/>
-      <SessionProvider session={session}>
-        <UserProvider>
-          <ProblemProvider>
+      <SessionProvider>
+        {/* <UserProvider>
+          <ProblemProvider> */}
             <QueryClientProvider client={client}>
               {children}
             </QueryClientProvider>
-          </ProblemProvider>
-        </UserProvider>
+          {/* </ProblemProvider>
+        </UserProvider> */}
       </SessionProvider>
     </>
   );

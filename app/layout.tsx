@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import Providers from "./providers/Providers";
 import Navbar from "./components/Navbar";
-import { authOptions } from "./api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -22,12 +21,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(authOptions)
+  // const session = await getServerSession(authOptions)
   return (
     <html lang="en">
       <body className={inter.className}>
         <main>
-          <Providers session={session}>
+          {/* <Providers session={session}> */}
+          <Providers>
             <Navbar/>
             <main className={poppins.className}>{children}</main>
           </Providers>

@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 connect();
 
 export async function POST(request: NextRequest) {
+
   try {
     const reqBody = await request.json();
     const { email, password } = reqBody;
@@ -24,6 +25,12 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+    // return {
+    //   id:user.id,
+    //   email:user.email,
+    //   name:user.username,
+    // };
+    return NextResponse.json({message:"logged in",success:true,user})
 
     const tokenData = {
       id: user._id,

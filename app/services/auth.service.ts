@@ -6,7 +6,9 @@ class AuthService {
     return res.data;
   }
   static async signup(data: any) {
+    console.log("Requst Received")
     const res = await api.post("/users/signup", data);
+    console.log("Requst done",res);
     return res.data;
   }
 }

@@ -1,73 +1,44 @@
-import { AuthOptions } from "next-auth";
-import { AxiosError } from "axios";
-import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth from "next-auth/next";
-import AuthService from "@/app/services/auth.service";
-import { api } from "@/app/config/axios";
+import { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import User from "@/models/userModel";
+import bcryptjs from 'bcryptjs'
 
-const authOptions: AuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      name: "credentials",
+      name: "Credentials",
       credentials: {
-        email: {
-          label: "Email",
-          type: "email",
-        },
-        password: { label: "Password", type: "password" },
+        email: { label: "Email", type: "text", placeholder: "your-email" },
+        password: { label: "Password", type: "your-password" },
       },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials.password) return null;
-        try {
-          const res = await AuthService.login({
-            identifier: credentials?.email,
-            password: credentials?.password,
-          });
-          if (!res) return null;
-          return res;
-        } catch (err: any) {
-          if (err instanceof AxiosError) {
-            throw new Error(err.response?.data.error.message);
-          } else {
-            throw new Error(err);
-          }
+      async authorize(credentials, req) {
+        if(!credentials || !credentials.password || !credentials.email)return null;
+        const {email,password} = credentials;
+    
+        const user = await User.findOne({ email });
+        if (!user) {
+          return null;
         }
+
+        const validPassword = await bcryptjs.compare(password, user.password);
+
+        if (!validPassword) {
+          return null;
+        }
+        return {
+          id: user.id,
+          name: user.username,
+          email: user.email,
+        };
       },
     }),
   ],
-  callbacks: {
-    jwt: ({ token, user }) => {
-      if (user) {
-        const u = user as unknown as any;
-        return {
-          ...token,
-          id: u.id,
-          randomKey: u.randomKey,
-        };
-      }
-      return token;
-    },
-    session: ({ session, token }) => {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: token.id,
-          randomKey: token.randomKey,
-        },
-      };
-    },
-  },
-  pages: {
-    signIn: "/login",
-  },
-  secret: process.env.NEXTAUTH_SECRET,
-  debug: true,
-  session: {
-    strategy: "jwt",
-  },
+
+  pages:{
+    // signIn:'/login',
+  }
 };
 
 const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
-export { authOptions };
+export {handler as GET,handler as POST};
