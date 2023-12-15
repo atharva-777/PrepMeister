@@ -1,59 +1,65 @@
 // "use client"
-import React,{useContext,useEffect} from "react";
+import React, { useEffect, useState } from "react";
 import Description from "./Description/Description";
 import Playground from "./Playground/Playground";
 import Split from "react-split";
-import { ProblemContext } from "@/app/context/ProblemContext";
 import axios from "axios";
 import { useQuery } from "react-query";
 import ProblemService from "@/app/services/problem.service";
 import { useSession } from "next-auth/react";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+
+export const getServerSideProps = (async (context) => {
+  const { slug } = context.query;
+  console.log("Problem ", slug);
+  const problem = await ProblemService.getSingleProblem(slug);
+  return { props: { problem } };
+}) satisfies GetServerSideProps<{ problem: ProblemType }>;
 
 type WorkspaceProps = {
-    slug: String;
+  slug: String;
+  problem?: InferGetServerSidePropsType<typeof getServerSideProps>;
 };
 
-const Workspace: React.FC<WorkspaceProps> = ({ slug }) => {
+const Workspace: React.FC<WorkspaceProps> = ({ slug,  }) => {
+  const { data: session } = useSession();
+  const [problem, setProblem] = useState<ProblemType>();
 
-  const user = useSession();
+  // const { data, isLoading } = useQuery(
+  //   ["problem"],
+  //   () => ProblemService.getSingleProblem(slug),
+  //   {
+  //     onSuccess(data) {
+  //       console.log("data", data);
+  //       setProblem(data);
+  //     },
+  //     onError(err) {
+  //       console.log("error occured");
+  //     },
+  //   }
+  // );
 
-    const { problem, setProblem } = useContext<any>(ProblemContext);
-    
-    const {data,isLoading} = useQuery(
-      ["problem"],
-      () => ProblemService.getSingleProblem(slug),
-      {
-        onSuccess(data) {
-          setProblem(data)
-            console.log("data",data)
-        },
-        onError(err) {
-            console.log("error occured")
-        },
-      }
-    )
-    
+  useEffect(() => {
+    const getProblem = async (slug: String) => {
+      const p = await axios.post(
+        "http://localhost:4000/api/v1/problems/getProblem",
+        { slug: slug }
+      );
+      setProblem(p.data.problem);
+    };
+    getProblem(slug);
+  }, [slug]);
 
-    useEffect(() => {
-      const getProblem = async (slug: String) => {
-        try {
-          const p = await axios.post("/api/problem/getProblem", {
-            slug: slug,
-          });
-          setProblem(p.data.problem);
-        } catch (error: any) {
-          console.log(error.message);
-        }
-      };
-      getProblem(slug);
-    }, [setProblem, slug]);
-
-    return (
-      <Split className="split" minSize={0}>
-          <Description problem={problem}/>
+  return (
+      <>
+        {problem && 
+      <Split className="split mt-8" minSize={0}>
+        <Description problem={problem}/>
           <Playground problem={problem}/>
-      </Split>  
-    );
+      </Split>
+        }
+        </>
+  );
 };
 
 export default Workspace;

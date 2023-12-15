@@ -4,12 +4,10 @@ import Image from "next/image";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { BsList } from "react-icons/bs";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
-import { UserContext } from "../context/UserProvider";
-import { TbUserCircle } from "react-icons/tb";
 import "@/public/assets/prepmeisterlogo.png";
 import Avatar from "react-avatar";
 import Timer from "./Timer";
+import { useSession } from "next-auth/react";
 
 type TopbarProps = {
   problemPage?: boolean;
@@ -18,7 +16,8 @@ type TopbarProps = {
 let problem:ProblemType 
 
 const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
-  const { user, setUser } = useContext<any>(UserContext);
+  const {data:session} = useSession();
+  const user = session?.user;
   const router = useRouter();
 
   const handleProblemChange = (isForward: boolean) => {};
@@ -75,12 +74,11 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
               <Avatar
                 className="rounded-full"
                 size="40px"
-                name={user.username}
+                name={user.name || null || undefined}
                 color={"green"}
               />
             </div>
           )}
-          {/* {user && <Logout />} */}
         </div>
       </div>
     </nav>

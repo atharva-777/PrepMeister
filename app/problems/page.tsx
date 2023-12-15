@@ -3,14 +3,12 @@ import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { UserContext } from "../context/UserProvider";
-import { useContext } from "react";
 import { BsCheck } from "react-icons/bs";
 import { FaCross } from "react-icons/fa";
-import Navbar from "../components/Navbar";
 import TestService from "../services/test";
 import { ITest } from "../interfaces/ITest";
 import { useQuery } from "react-query";
+import { useSession } from "next-auth/react";
 
 interface ProblemType {
   _id: string;
@@ -24,8 +22,9 @@ interface ProblemType {
 }
 
 const Problems = () => {
+
+  const {data:session} = useSession();
   const [data, setData] = useState<ProblemType[]>();
-  const { user, setUser } = useContext<any>(UserContext);
   const [solved, setSolved] = useState<number[]>();
   const [problems, setProblems] = useState<ITest["data"]>();
   const [loaded, setLoaded] = useState<boolean>(false);
@@ -45,11 +44,11 @@ const Problems = () => {
 
   const getSolvedProblems = async () => {
     try {
-      if (!user) {
+      if (!session?.user) {
         return null;
       }
       const data = await axios.post("/api/users/getSolved", {
-        email: user.email,
+        email: session.user.email,
       });
       setSolved(data.data.record[0].solved);
     } catch (error: any) {
@@ -61,21 +60,22 @@ const Problems = () => {
   useEffect(() => {
     getProblems();
     getSolvedProblems();
-  }, [user]);
+  }, []);
 
   const { isLoading, error, isFetched } = useQuery({
     // queryKey:["problem"],
     queryFn: async () => {
       const res = await TestService.getProblems<ITest>(lim);
+      console.log(res)
       setLoaded(true);
     },
     enabled: loaded ? false : true,
   });
   if (isLoading) {
-    console.log("loading data");
+    // console.log("loading data");
   }
   if (isFetched) {
-    console.log("data received");
+    // console.log("data received");
   }
 
   const handleReq = async () => {
@@ -87,10 +87,9 @@ const Problems = () => {
   };
 
   return (
-    <div>
-      {/* <Navbar /> */}
+    <div className="mt-24">
       <div className="mt-24 flex justify-center mx-auto">
-        <table className="w-full max-w-7xl text-center space-x-10 border p-10">
+        <table className="w-full max-w-7xl text-center space-x-10 border p-10 table-auto">
           <thead className="text-lg font-bold p-2">
             <tr className="p-3">
               <td>Status</td>
@@ -117,10 +116,10 @@ const Problems = () => {
                     } m-2`}
                   >
                     <td className="p-5 text-center">
-                      {user && solved?.includes(problem.number) === true ? (
+                      {session?.user && solved?.includes(problem.number) === true ? (
                         <p>
                           Yes
-                        <BsCheck />
+                          <BsCheck />
                         </p>
                       ) : (
                         <FaCross />

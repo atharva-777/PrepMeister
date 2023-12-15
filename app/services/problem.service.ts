@@ -1,8 +1,11 @@
 import { api } from "../config/axios";
 
 class ProblemService {
-  static async getSingleProblem(slug: String) {
+  static async getSingleProblem(slug: String | any) {
+    console.log("request receiced")
     const res = await api.post("/problem/getProblem", slug);
+    console.log("request done");
+
     return res.data;
   }
   static async getAllProblem(lim:number){

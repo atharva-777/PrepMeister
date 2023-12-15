@@ -1,4 +1,3 @@
-import Navbar from "@/app/components/Navbar";
 import Topbar from "@/app/components/Topbar";
 import React from 'react'
 
@@ -9,13 +8,9 @@ export default function ProblemLayout({
 }) {
   return (
     <section>
-        <main>
-          {/* <Navbar/> */}
+      <main>
             {/* <Topbar problemPage={true}/> */}
-            <main>
-
         {children}
-            </main>
         </main>
         </section>
   );

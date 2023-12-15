@@ -18,8 +18,8 @@ const Navbar = () => {
 
   return (
     <header className="fixed left-0 right-0 top-0 z-20 shadow-md bg-white">
-      <div className="justify-between md:items-center md:flex space-y-2">
-        <h1 className="text-4xl">
+      <div className="justify-between md:items-center md:flex space-y-1 text-lg">
+        <h1 className="text-2xl">
           <Link href={"/"}>PrepMeister</Link>
         </h1>
         <div>
