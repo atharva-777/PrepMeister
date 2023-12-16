@@ -8,6 +8,7 @@ import { signOut, useSession } from "next-auth/react";
 const UserProfile = () => {
   const { data: session } = useSession();
   const user = session?.user;
+  const router = useRouter();
 
   return (
     <div>
@@ -36,7 +37,11 @@ const UserProfile = () => {
 
         <button
           className="p-3 m-4 bg-red-400 rounded hover:bg-red-500 hover:z-20"
-          onClick={(e) => signOut()}
+          onClick={(e) => {
+            signOut();
+            router.push('/');
+          }
+          }
         >
           Logout
         </button>

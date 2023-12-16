@@ -25,30 +25,27 @@ const Workspace: React.FC<WorkspaceProps> = ({ slug,  }) => {
   const { data: session } = useSession();
   const [problem, setProblem] = useState<ProblemType>();
 
-  // const { data, isLoading } = useQuery(
-  //   ["problem"],
-  //   () => ProblemService.getSingleProblem(slug),
-  //   {
-  //     onSuccess(data) {
-  //       console.log("data", data);
-  //       setProblem(data);
-  //     },
-  //     onError(err) {
-  //       console.log("error occured");
-  //     },
-  //   }
-  // );
+  const {isLoading,error,data} = useQuery('problems',async ()=>{
+      const p = await axios.post('http://localhost:3000/api/problem/getProblem',{slug:slug})
+      setProblem(p.data.problem)
+      return p.data},
+      {
+        onSuccess(data){
+          setProblem(data.problem)
+        }
+      })
 
-  useEffect(() => {
-    const getProblem = async (slug: String) => {
-      const p = await axios.post(
-        "http://localhost:4000/api/v1/problems/getProblem",
-        { slug: slug }
-      );
-      setProblem(p.data.problem);
-    };
-    getProblem(slug);
-  }, [slug]);
+  // useEffect(() => {
+  //   const getProblem = async (slug: String) => {
+  //     const p = await axios.post(
+  //       "http://localhost:4000/api/v1/problems/getProblem",
+  //       { slug: slug }
+  //     );
+  //     console.log("Backend ",p.data)
+  //     setProblem(p.data.problem);
+  //   };
+  //   getProblem(slug);
+  // }, [slug]);
 
   return (
       <>

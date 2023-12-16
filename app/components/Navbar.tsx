@@ -29,18 +29,14 @@ const Navbar = () => {
         <div>Groups</div>
 
         {!user && (
-          <>
-            <li>
+          <div className="flex space-x-4 px-4 py-4">
               <Link href="/login" className="text-ct-dark-600">
                 Login
               </Link>
-            </li>
-            <li>
               <Link href="/signup" className="text-ct-dark-600">
                 Register
               </Link>
-            </li>
-          </>
+          </div>
         )}
 
         {user && (
