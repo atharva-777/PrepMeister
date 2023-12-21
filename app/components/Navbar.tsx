@@ -5,10 +5,12 @@ import { TbUserCircle } from "react-icons/tb";
 import { AiOutlineLogout } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
 import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const { data: session } = useSession();
   const user = session?.user;
+  const router = useRouter();
 
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 
@@ -26,16 +28,18 @@ const Navbar = () => {
           <Link href={"/problems"}>Problems</Link>
         </div>
         <div>Discussion</div>
-        <div>Groups</div>
+        <div>
+          <Link href={"/groups"}>Groups</Link>
+        </div>
 
         {!user && (
           <div className="flex space-x-4 px-4 py-4">
-              <Link href="/login" className="text-ct-dark-600">
-                Login
-              </Link>
-              <Link href="/signup" className="text-ct-dark-600">
-                Register
-              </Link>
+            <Link href="/login" className="text-ct-dark-600">
+              Login
+            </Link>
+            <Link href="/signup" className="text-ct-dark-600">
+              Register
+            </Link>
           </div>
         )}
 
@@ -58,7 +62,10 @@ const Navbar = () => {
                     </li>
                   </Link>
                   <li
-                    onClick={() => signOut()}
+                    onClick={() => {
+                      signOut();
+                      router.push("/");
+                    }}
                     className="px-4 py-2 cursor-pointer flex items-center space-x-2 hover:bg-gray-100"
                   >
                     <AiOutlineLogout size={20} />

@@ -87,17 +87,19 @@ const Problems = () => {
   };
 
   return (
-    <div className="mt-24">
-      <div className="mt-24 flex justify-center mx-auto">
+    <div className="pt-24">
+      <div className="mb-8 flex justify-center mx-auto">
         <table className="w-full max-w-7xl text-center space-x-10 border p-10 table-auto">
-          <thead className="text-lg font-bold p-2">
-            <tr className="p-3">
+          <thead className="text-xl font-bold">
+            <br />
+            <tr className="">
               <td>Status</td>
               <td>Number</td>
               <td>Title</td>
               <td>Tags</td>
               <td>Difficulty</td>
             </tr>
+            <br />
           </thead>
           <tbody>
             {data &&
@@ -116,7 +118,8 @@ const Problems = () => {
                     } m-2`}
                   >
                     <td className="p-5 text-center">
-                      {session?.user && solved?.includes(problem.number) === true ? (
+                      {session?.user &&
+                      solved?.includes(problem.number) === true ? (
                         <p>
                           Yes
                           <BsCheck />
