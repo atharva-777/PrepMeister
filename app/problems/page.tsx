@@ -91,25 +91,23 @@ const Problems = () => {
       <div className="mb-8 flex justify-center mx-auto">
         <table className="w-full max-w-7xl text-center space-x-10 border p-10 table-auto">
           <thead className="text-xl font-bold">
-            <br />
-            <tr className="">
-              <td>Status</td>
+            <tr className="p-8">
+              <td className="p-5">Status</td>
               <td>Number</td>
               <td>Title</td>
               <td>Tags</td>
               <td>Difficulty</td>
             </tr>
-            <br />
           </thead>
           <tbody>
             {data &&
               data.map((problem, idx) => {
                 const difficulyColor =
                   problem.level === "easy"
-                    ? "text-green-400"
+                    ? "text-green-600"
                     : problem.level === "medium"
-                    ? "text-orange-400"
-                    : "text-red-400";
+                    ? "text-orange-600"
+                    : "text-red-600";
                 return (
                   <tr
                     key={idx}

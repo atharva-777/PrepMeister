@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
@@ -9,13 +10,9 @@ import Avatar from "react-avatar";
 import Timer from "./Timer";
 import { useSession } from "next-auth/react";
 
-type TopbarProps = {
-  problemPage?: boolean;
-};
+const problemPage = true;
 
-let problem:ProblemType 
-
-const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
+  const Topbar = () => {
   const {data:session} = useSession();
   const user = session?.user;
   const router = useRouter();
@@ -23,7 +20,7 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
   const handleProblemChange = (isForward: boolean) => {};
 
   return (
-    <nav className="flex h-[60px] w-full shrink-0 items-center px-5 relative  p-4 border overflow-hidden">
+    <nav className="flex h-[60px] pt-24 w-full shrink-0 items-center px-5 relative  p-8 border overflow-hidden">
       <div
         className={`flex w-full items-center justify-between ${
           !problemPage ? "max-w-[1200px] mx-auto" : ""
@@ -31,7 +28,6 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
       >
         <Link href="/" className="h-[22px] flex-1">
           <h1 className="text-xl font-bold">PrepMeister</h1>
-          {/* <Image src={'/assets/prepmeisterlogo.png'} className="pb-2 bg-white" width={150} height={150} alt=""/> */}
         </Link>
 
         {problemPage && (
@@ -84,4 +80,6 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
     </nav>
   );
 };
+
+
 export default Topbar;

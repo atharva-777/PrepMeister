@@ -1,5 +1,5 @@
 import Topbar from "@/app/components/Topbar";
-import React from 'react'
+import React from "react";
 
 export default function ProblemLayout({
   children,
@@ -9,9 +9,9 @@ export default function ProblemLayout({
   return (
     <section>
       <main>
-            {/* <Topbar problemPage={true}/> */}
+        <Topbar />
         {children}
-        </main>
-        </section>
+      </main>
+    </section>
   );
 }

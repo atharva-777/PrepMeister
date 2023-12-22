@@ -6,7 +6,6 @@ connect();
 
 export async function POST(req: NextRequest) {
     try{
-        console.log("request at end")
         const reqBody = await req.json();
         const {slug} = reqBody;
         const problem = await Question.findOne({slug})
