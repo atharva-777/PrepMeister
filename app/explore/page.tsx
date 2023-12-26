@@ -1,8 +1,12 @@
 "use client";
 import React from 'react'
-import { api } from '../config/axios'
 import axios from 'axios'
+import { api } from '../config/axios';
 import { useSession } from 'next-auth/react';
+import ProblemService from '../services/problem.service';
+import { useQuery } from 'react-query';
+
+const s = "two-sum";
 
 const Explore = () => {
 
@@ -10,12 +14,47 @@ const Explore = () => {
   const user = session?.user;
 
 
+  const { isLoading, error, data } = useQuery(
+    "problems",
+    async () => {
+      // const p = await axios.post(
+      //   "http://localhost:3000/api/problem/getProblem",
+      //   { slug: "two-sum" }
+      // );
+      console.log("use query")
+      const d = await ProblemService.getSingleProblem({slug:"two-sum"});
+      console.log("by problemservice" ,d)
+    const p = await api.post("/problems/getProblem", {slug:"two-sum"});
+      console.log("by api ",p.data)
+      return p.data;
+    },
+    {
+      onSuccess(data) {
+        console.log("success")
+      },
+      onError(err){
+        console.log("Error ",err);
+      }
+    }
+  );  
+
+
     const call = async () => {
-        const dataFromBackend = await axios.post(
-            "http://localhost:4000/api/v1/problems/getProblem",
-            {slug:"two-sum"}
-            );  
-            console.log(dataFromBackend.data)
+        // const res = await axios({
+        //   method: "POST",
+        //   url: "http://localhost:4000/api/v1/problems/getProblem",
+        //   data: {
+        //     slug: "two-sum",
+        //   },
+        //   headers: {
+        //     "Access-Control-Allow-Origin": "*",
+        //     "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+        //   },
+        // });
+
+          const res = data;
+
+            console.log("fetched ",res)
     }
     
 

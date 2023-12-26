@@ -1,16 +1,19 @@
+import { headers } from "next/dist/client/components/headers";
 import { api } from "../config/axios";
+import axios from "axios";
 
 class ProblemService {
-  static async getSingleProblem(slug: String | any) {
-    console.log("request received");
-    const res = await api.post("/problem/getProblem", slug);
-    console.log("request done");
-
-    return res.data;
+  static async getSingleProblem(slug: String | any ) {
+    console.log("request received at problemservice");
+    const data = await api.post('/problems/getProblem',slug);
+    return data.data;
   }
   static async getAllProblem(lim: number) {
-    const res = await api.post("/problem/get", lim);
+    const res = await api.post("/problems/getAllProblems", lim);
     return res.data;
+  }
+  static async getAll(){
+    const res = await api.post("/problems/getAllProblems",{lim:5});
   }
 }
 

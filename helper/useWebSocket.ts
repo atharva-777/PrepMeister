@@ -4,11 +4,14 @@ import { io } from "socket.io-client";
 function useWebSocket() {
   const [messages, setMessages] = useState<Array<string>>([]);
   const [error, setError] = useState(null);
-
-  const socket = io("http://localhost:4000");
+// you can also use http://localhost:4000 | Backend URL
+  const socket = io("ws://localhost:4000");
   useEffect(() => {
     socket.on("connect", () => {
       console.log("Connected to server!");
+      socket.io.engine.on('upgrade',()=>{
+        const upgradedTransport = socket.io.engine.transport.name;
+      })
     });
     socket.on("disconnect", () => {
       console.log("Disconnected from server!");
@@ -29,6 +32,7 @@ function useWebSocket() {
   const sendMessage = (message: string) => {
     if (socket.connected) {
       socket.send(message);
+      socket.emit("message",message);
     }
   };
 

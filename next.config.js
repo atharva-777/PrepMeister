@@ -3,7 +3,7 @@ const nextConfig = {
   // async rewrites() {
   //   return [
   //     {
-  //       // source: "/api/v1/:path*",
+  //       source: "/api/v1/:path*",
   //       source: "/:path*",
   //       destination: "http://localhost:4000/:path*",
   //     },
