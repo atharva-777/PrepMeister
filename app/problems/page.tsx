@@ -5,10 +5,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { BsCheck } from "react-icons/bs";
 import { FaCross } from "react-icons/fa";
-import TestService from "../services/test";
 import { ITest } from "../interfaces/ITest";
 import { useQuery } from "react-query";
 import { useSession } from "next-auth/react";
+import ProblemService from "../services/problem.service";
 
 interface ProblemType {
   _id: string;
@@ -27,20 +27,9 @@ const Problems = () => {
   const [data, setData] = useState<ProblemType[]>();
   const [solved, setSolved] = useState<number[]>();
   const [problems, setProblems] = useState<ITest["data"]>();
-  const [loaded, setLoaded] = useState<boolean>(false);
 
   let ps: ProblemType[];
   const lim = 50;
-  const getProblems = async () => {
-    try {
-      const d = await axios.post("/api/problem/get", { lim });
-      ps = d.data.data;
-      setData(d.data.data);
-      // console.log(data && data[0].title)
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  };
 
   const getSolvedProblems = async () => {
     try {
@@ -58,33 +47,19 @@ const Problems = () => {
   };
 
   useEffect(() => {
-    getProblems();
     getSolvedProblems();
   }, []);
 
   const { isLoading, error, isFetched } = useQuery({
     // queryKey:["problem"],
     queryFn: async () => {
-      const res = await TestService.getProblems<ITest>(lim);
-      console.log(res)
-      setLoaded(true);
+      const res = await ProblemService.getAllProblem(lim);
+      setProblems(res.problems);
+      setData(res.problems);
+      return res.problems;
     },
-    enabled: loaded ? false : true,
+    enabled: session?.user ? true : false,
   });
-  if (isLoading) {
-    // console.log("loading data");
-  }
-  if (isFetched) {
-    // console.log("data received");
-  }
-
-  const handleReq = async () => {
-    console.log("here");
-    const res = await TestService.getProblems<ITest>(10).then(({ data }) => {
-      setProblems(data);
-      console.log("data ", problems);
-    });
-  };
 
   return (
     <div className="pt-24">
@@ -100,8 +75,8 @@ const Problems = () => {
             </tr>
           </thead>
           <tbody>
-            {data &&
-              data.map((problem, idx) => {
+            {problems &&
+              problems.map((problem, idx) => {
                 const difficulyColor =
                   problem.level === "easy"
                     ? "text-green-600"

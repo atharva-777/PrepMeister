@@ -8,7 +8,7 @@ function useWebSocket() {
   const socket = io("ws://localhost:4000");
   useEffect(() => {
     socket.on("connect", () => {
-      console.log("Connected to server!");
+      console.log("Connected to server!",socket.id);
       socket.io.engine.on('upgrade',()=>{
         const upgradedTransport = socket.io.engine.transport.name;
       })
@@ -27,10 +27,11 @@ function useWebSocket() {
     return () => {
       socket.disconnect();
     };
-  }, [socket]);
+  }, [socket,messages]);
 
   const sendMessage = (message: string) => {
     if (socket.connected) {
+      setMessages([message]);
       socket.send(message);
       socket.emit("message",message);
     }

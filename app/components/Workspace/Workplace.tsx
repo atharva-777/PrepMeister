@@ -23,29 +23,26 @@ type WorkspaceProps = {
 
 const Workspace: React.FC<WorkspaceProps> = ({ slug,  }) => {
   const { data: session } = useSession();
+  const user = session?.user;
   const [problem, setProblem] = useState<ProblemType>();
 
   const {isLoading,error,data} = useQuery('problems',async ()=>{
-      const p = await axios.post('http://localhost:3000/api/problem/getProblem',{slug:slug})
-      setProblem(p.data.problem)
-      return p.data},
+      // const p = await axios.post('http://localhost:3000/api/problem/getProblem',{slug:slug})
+      const p = await ProblemService.getSingleProblem({slug:slug});
+      setProblem(p.problem)
+      return p},
       {
         onSuccess(data){
-          setProblem(data.problem)
+          // setProblem(data.problem)
         }
       })
 
-  // useEffect(() => {
-  //   const getProblem = async (slug: String) => {
-  //     const p = await axios.post(
-  //       "http://localhost:4000/api/v1/problems/getProblem",
-  //       { slug: slug }
-  //     );
-  //     console.log("Backend ",p.data)
-  //     setProblem(p.data.problem);
-  //   };
-  //   getProblem(slug);
-  // }, [slug]);
+
+      if(!session){
+        return(
+          <div className="pt-24 bg-red-500">Please Login First</div>
+        )
+      }
 
   return (
       <>

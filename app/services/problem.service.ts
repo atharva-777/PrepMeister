@@ -4,7 +4,6 @@ import axios from "axios";
 
 class ProblemService {
   static async getSingleProblem(slug: String | any ) {
-    console.log("request received at problemservice");
     const data = await api.post('/problems/getProblem',slug);
     return data.data;
   }

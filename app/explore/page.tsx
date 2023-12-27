@@ -17,10 +17,11 @@ const Explore = () => {
   const { isLoading, error, data } = useQuery(
     "problems",
     async () => {
-      // const p = await axios.post(
+      // const x = await axios.post(
       //   "http://localhost:3000/api/problem/getProblem",
       //   { slug: "two-sum" }
       // );
+      // console.log("backend req",x.data)
       console.log("use query")
       const d = await ProblemService.getSingleProblem({slug:"two-sum"});
       console.log("by problemservice" ,d)
@@ -34,8 +35,9 @@ const Explore = () => {
       },
       onError(err){
         console.log("Error ",err);
-      }
-    }
+      },
+      enabled: session?.user !== null ? true: false,
+    },
   );  
 
 

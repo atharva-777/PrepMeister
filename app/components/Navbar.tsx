@@ -19,7 +19,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-20 shadow-md bg-white">
+    <header className="fixed left-0 right-0 top-0 z-20 px-4 shadow-m bg-blue-100">
       <div className="justify-between md:items-center md:flex space-y-1 text-lg">
         <h1 className="text-2xl">
           <Link href={"/"}>PrepMeister</Link>
@@ -55,7 +55,7 @@ const Navbar = () => {
             {showProfileDropdown && (
               <div className="absolute right-0 w-36 bg-white border border-gray-300 rounded-lg shadow-lg">
                 <ul className="py-1">
-                  <Link href={"/profile"}>
+                  <Link href={"/profile"} onClick={toggleProfileDropdown}>
                     <li className="px-4 py-2 flex items-center space-x-2 cursor-pointer hover:bg-gray-100">
                       <CgProfile size={20} />
                       <p>Profile</p>
