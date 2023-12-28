@@ -20,11 +20,7 @@ const Playground: React.FC<PlaygroundProps> = ({}) => {
 
   let [userCode, setUserCode] = useState<string>(boilerPlate);
   const [processing, setProcessing] = useState<boolean>(false);
-
-  const selectLanguage = (sl: string) => {
-    selectLanguage(sl);
-    return;
-  };
+  const [language,setLanguage] = useState<string>("javascript");
 
   const extensions = [cpp()];
   const handleSubmit = () => {
@@ -83,7 +79,7 @@ const Playground: React.FC<PlaygroundProps> = ({}) => {
 
   return (
     <div className="flex flex-col bg-black text-white relative overflow-hidden">
-      <PreferenceBar handleLanguage={selectLanguage} />
+      <PreferenceBar language={language} setLanguage={setLanguage} />
       <Split
         className="h-[calc(100vh-94px)]"
         direction="vertical"

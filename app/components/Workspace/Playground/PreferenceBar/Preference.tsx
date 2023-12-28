@@ -9,7 +9,9 @@ import { languageOptions } from "@/constants/languageOptions";
 import Modal from "@/app/components/CustomModal/Modal";
 
 type PreferenceBarProps = {
-  handleLanguage: (sl:string) => void;
+  language: string;
+  setLanguage: (lang:string) => void;
+  // selectLanguage: (sl: string) => void;
 };
 
 // const PreferenceBar:React.FC<PreferenceBarProps> = ({handleLanguage}) => {
@@ -23,9 +25,8 @@ type PreferenceBarProps = {
 // }
 
 
-const PreferenceBar:React.FC<PreferenceBarProps> = ({handleLanguage}) => {
+const PreferenceBar:React.FC<PreferenceBarProps> = ({language,setLanguage}) => {
   const [isOpen, setIsOpen] = useState(false);
-  let language = "Javascript";
 
   const [isFullScreen, setIsFullScreen] = useState(false);
 
@@ -46,32 +47,26 @@ const PreferenceBar:React.FC<PreferenceBarProps> = ({handleLanguage}) => {
     <div className="flex items-center justify-between bg-dark-layer-2 h-11 w-full "> 
       <div className="relative px-4">
         <button onClick={toggleDropdown} className="rounded-md">
-          {language}
+          Language : {language}
         </button>
-        {languageOptions.map((lang,key)=>{
-          return (
-            <div key={key}>
-              {/* <li onClick={()=>{handleLanguage(lang.name)}}>
 
-              {lang.name}
-              </li> */}
-              </div>
-          )
-        })}
         {isOpen && (
-          <ul className="z-50 absolute top-8 left-0 bg-black shadow-md w-40">
-            <li
-              className="py-2 px-4 hover:bg-blue-400 cursor-pointer"
-                onClick={() => handleLanguage("javascript")}
-              >
-              Javascript
-            </li>
-            <li
-              className="py-2 px-4 hover:bg-blue-400 cursor-pointer"
-              onClick={() => handleLanguage("cpp")}
-            >
-              C++
-            </li>
+          <ul className="z-50 absolute top-8 left-0 grid grid-cols-3 bg-gray-800 shadow-md w-96 rounded-md">
+            {languageOptions.map((language,key)=>{
+              return (
+                <li
+                  key={key}
+                  onClick={(e)=>{
+                    e.preventDefault();
+                    setLanguage(language.value);
+                    toggleDropdown();
+                  }}
+                  className="py-2 px-4 hover:bg-blue-400 cursor-pointer"
+                >
+                  {language.value}
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>

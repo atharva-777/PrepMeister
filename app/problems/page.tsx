@@ -53,7 +53,7 @@ const Problems = () => {
   const { isLoading, error, isFetched } = useQuery({
     // queryKey:["problem"],
     queryFn: async () => {
-      const res = await ProblemService.getAllProblem(lim);
+      const res = await ProblemService.getAllProblem({lim:lim});
       setProblems(res.problems);
       setData(res.problems);
       return res.problems;

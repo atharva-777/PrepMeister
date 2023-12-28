@@ -7,7 +7,7 @@ class ProblemService {
     const data = await api.post('/problems/getProblem',slug);
     return data.data;
   }
-  static async getAllProblem(lim: number) {
+  static async getAllProblem(lim: number | any) {
     const res = await api.post("/problems/getAllProblems", lim);
     return res.data;
   }

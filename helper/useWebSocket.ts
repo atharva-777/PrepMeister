@@ -6,6 +6,7 @@ function useWebSocket() {
   const [error, setError] = useState(null);
 // you can also use http://localhost:4000 | Backend URL
   const socket = io("ws://localhost:4000");
+  socket.connect();
   useEffect(() => {
     socket.on("connect", () => {
       console.log("Connected to server!",socket.id);
