@@ -7,10 +7,12 @@ import {
 } from "react-icons/ai";
 import { languageOptions } from "@/constants/languageOptions";
 import Modal from "@/app/components/CustomModal/Modal";
+import codes from "@/utils/boilerPlateCodes";
 
 type PreferenceBarProps = {
   language: string;
-  setLanguage: (lang:string) => void;
+  setLanguage: (lang: string) => void;
+  setUserCode: (code:string) => void;
   // selectLanguage: (sl: string) => void;
 };
 
@@ -25,7 +27,11 @@ type PreferenceBarProps = {
 // }
 
 
-const PreferenceBar:React.FC<PreferenceBarProps> = ({language,setLanguage}) => {
+const PreferenceBar: React.FC<PreferenceBarProps> = ({
+  language,
+  setLanguage,
+  setUserCode,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -44,7 +50,7 @@ const PreferenceBar:React.FC<PreferenceBarProps> = ({language,setLanguage}) => {
   };
 
   return (
-    <div className="flex items-center justify-between bg-dark-layer-2 h-11 w-full "> 
+    <div className="flex items-center justify-between bg-dark-layer-2 h-11 w-full ">
       <div className="relative px-4">
         <button onClick={toggleDropdown} className="rounded-md">
           Language : {language}
@@ -52,13 +58,17 @@ const PreferenceBar:React.FC<PreferenceBarProps> = ({language,setLanguage}) => {
 
         {isOpen && (
           <ul className="z-50 absolute top-8 left-0 grid grid-cols-3 bg-gray-800 shadow-md w-96 rounded-md">
-            {languageOptions.map((language,key)=>{
+            {languageOptions.map((language, key) => {
               return (
                 <li
                   key={key}
-                  onClick={(e)=>{
+                  onClick={(e) => {
                     e.preventDefault();
                     setLanguage(language.value);
+                    
+  const lang =
+    Object.values(codes).find((lang) => lang.name===language.value)?.code || codes.other.code;
+                    setUserCode(lang);
                     toggleDropdown();
                   }}
                   className="py-2 px-4 hover:bg-blue-400 cursor-pointer"
@@ -72,9 +82,7 @@ const PreferenceBar:React.FC<PreferenceBarProps> = ({language,setLanguage}) => {
       </div>
 
       <div className="flex items-center m-2">
-        <button
-          className="preferenceBtn group"
-        >
+        <button className="preferenceBtn group">
           <div className="h-4 w-4 text-dark-gray-6 font-bold text-lg">
             <AiOutlineSetting />
           </div>
@@ -82,15 +90,15 @@ const PreferenceBar:React.FC<PreferenceBarProps> = ({language,setLanguage}) => {
         </button>
 
         <button className="preferenceBtn group" onClick={handleFullScreen}>
-            <div className="h-4 w-4 text-dark-gray-6 font-bold text-lg">
-              {!isFullScreen ? (
-                <AiOutlineFullscreen />
-              ) : (
-                <AiOutlineFullscreenExit />
-              )}
-            </div>
-            <div className="preferenceBtn-tooltip">Full Screen</div>
-          </button>
+          <div className="h-4 w-4 text-dark-gray-6 font-bold text-lg">
+            {!isFullScreen ? (
+              <AiOutlineFullscreen />
+            ) : (
+              <AiOutlineFullscreenExit />
+            )}
+          </div>
+          <div className="preferenceBtn-tooltip">Full Screen</div>
+        </button>
       </div>
     </div>
   );

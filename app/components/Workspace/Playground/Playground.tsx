@@ -8,21 +8,24 @@ import PreferenceBar from "./PreferenceBar/Preference";
 import EditorFooter from "./Footer/EditorFooter";
 import { api } from "@/app/config/axios";
 import { toast } from "react-hot-toast";
+import codes from "@/utils/boilerPlateCodes";
+import { testCases } from "@/utils/testcases";
+import { TestCase } from "@/utils/types/testcase";
 
 type PlaygroundProps = {
+  slug: String;
   problem: ProblemType;
 };
 
-const Playground: React.FC<PlaygroundProps> = ({}) => {
-  const boilerPlate = `function twoSum(nums,target){
-    // Write your code here
-  };`;
-
-  let [userCode, setUserCode] = useState<string>(boilerPlate);
+const Playground: React.FC<PlaygroundProps> = ({ slug }) => {
   const [processing, setProcessing] = useState<boolean>(false);
-  const [language,setLanguage] = useState<string>("javascript");
-
+  const [language, setLanguage] = useState<string>("javascript");
+  const [currTestCases, setCurrTestCases] = useState<TestCase>(
+    testCases[slug.toString()]
+  );
+  const [userCode, setUserCode] = useState<string>(codes.javascript.code);
   const extensions = [cpp()];
+
   const handleSubmit = () => {
     // Judge0 api
   };
@@ -79,7 +82,11 @@ const Playground: React.FC<PlaygroundProps> = ({}) => {
 
   return (
     <div className="flex flex-col bg-black text-white relative overflow-hidden">
-      <PreferenceBar language={language} setLanguage={setLanguage} />
+      <PreferenceBar
+        language={language}
+        setLanguage={setLanguage}
+        setUserCode={setUserCode}
+      />
       <Split
         className="h-[calc(100vh-94px)]"
         direction="vertical"
@@ -107,31 +114,45 @@ const Playground: React.FC<PlaygroundProps> = ({}) => {
             </div>
           </div>
 
-          <div className="flex">
-            <div className="mr-2 items-start mt-2 ">
-              <div className="flex flex-wrap items-center gap-y-4">
-                <div
-                  className={`font-medium items-center transition-all focus:outline-none inline-flex bg-dark-fill-3 hover:bg-dark-fill-2 relative rounded-lg px-4 py-1 cursor-pointer whitespace-nowrap`}
-                >
-                  Case 1
-                </div>
-              </div>
-            </div>
-          </div>
+          {currTestCases && (
+            <div className="grid grid-cols-2 bg-gray-600 p-3">
+              {currTestCases.cases.map((testcase, idx) => {
+                return (
+                  <div key={idx}>
+                    <div className="">
+                      <div className="mr-2 items-start mt-2 ">
+                        <div className="flex flex-wrap items-center gap-y-4">
+                          <div
+                            className={`font-medium items-center transition-all focus:outline-none inline-flex bg-dark-fill-3 hover:bg-dark-fill-2 relative rounded-lg px-4 py-1 cursor-pointer whitespace-nowrap`}
+                          >
+                            Case {idx}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
-          <div className="font-semibold my-4">
-            <p className="text-sm font-medium mt-4 text-white">Input:</p>
-            <div className="w-full cursor-text rounded-lg border px-3 py-[10px] bg-dark-fill-3 border-transparent text-white mt-2">
-              atharva
+                    <div className="font-semibold my-4">
+                      <p className="text-sm font-medium mt-4 text-white">
+                        Input:
+                      </p>
+                      <div className="w-full cursor-text rounded-lg border px-3 py-[10px] bg-dark-fill-3 border-transparent text-white mt-2">
+                        Input : {testcase.input}
+                      </div>
+                      <p className="text-sm font-medium mt-4 text-white">
+                        Output:
+                      </p>
+                      <div className="w-full cursor-text rounded-lg border px-3 py-[10px] bg-dark-fill-3 border-transparent text-white mt-2">
+                        Expected Output : {testcase.expected}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-            <p className="text-sm font-medium mt-4 text-white">Output:</p>
-            <div className="w-full cursor-text rounded-lg border px-3 py-[10px] bg-dark-fill-3 border-transparent text-white mt-2">
-              not palindrome
-            </div>
-          </div>
+          )}
         </div>
       </Split>
-      <EditorFooter handleSubmit={handleSubmit} handleCompile={handleCompile}/>
+      <EditorFooter handleSubmit={handleSubmit} handleCompile={handleCompile} />
     </div>
   );
 };

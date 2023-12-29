@@ -47,9 +47,9 @@ const Workspace: React.FC<WorkspaceProps> = ({ slug,  }) => {
   return (
       <>
         {problem && 
-      <Split className="split mt-8" minSize={0}>
+      <Split className="split" minSize={0}>
         <Description problem={problem}/>
-          <Playground problem={problem}/>
+          <Playground problem={problem} slug={slug}/>
       </Split>
         }
         </>
