@@ -11,6 +11,8 @@ import { toast } from "react-hot-toast";
 import codes from "@/utils/boilerPlateCodes";
 import { testCases } from "@/utils/testcases";
 import { TestCase } from "@/utils/types/testcase";
+import SubmissionService from "@/app/services/submission.service";
+import { languageOptions } from "@/constants/languageOptions";
 
 type PlaygroundProps = {
   slug: String;
@@ -26,8 +28,21 @@ const Playground: React.FC<PlaygroundProps> = ({ slug }) => {
   const [userCode, setUserCode] = useState<string>(codes.javascript.code);
   const extensions = [cpp()];
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Judge0 api
+    const language_id = languageOptions.filter((lang)=> lang.value===language)[0].id;
+    const source_code = (userCode);
+    const stdin = currTestCases.cases[0].input;
+    const expected_output = currTestCases.cases[0].expected; 
+    const data = await SubmissionService.createSubmission({
+      language_id: language_id,
+      source_code: source_code,
+      stdin: stdin,
+      expected_output:expected_output,
+    });
+      const submission_token = data.res.token;
+      const submission_stat = await SubmissionService.getSubmission(submission_token);
+    console.log("submission done", data);
   };
 
   const onChange = useCallback((val: string, ViewUpdate: any) => {

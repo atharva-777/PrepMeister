@@ -4,6 +4,11 @@ const codes = {
     code: `#include <bits/stdc++.h>
     using namespace std;
         int main() {
+          int t;
+          cin>>t;
+          while(t--){
+
+          }
         return 0;
     }`,
   },
@@ -12,12 +17,51 @@ const codes = {
     code: `#include <stdio.h>
     using namespace std;
     int main() {
+      int t;
+      scanf("%d",t);
+      while(t--){
+
+      }
         return 0;
     }`,
   },
   javascript: {
     name: "javascript",
-    code: `console.log("Welcome to Programiz!");`,
+    code: `
+    'use strict';
+
+const fs = require('fs');
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', function(inputStdin) {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function() {
+    inputString = inputString.split('\n');
+
+    main();
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+function main(){
+  let t = parseInt(readLine());
+
+  for(let i=0;i<t;i++){
+    
+  }
+
+}
+
+`,
   },
   go: {
     name: "go",
@@ -68,7 +112,7 @@ const codes = {
   other: {
     name: "other",
     code: `//Write code from scratch`,
-  }
+  },
 };
 
 export default codes;
