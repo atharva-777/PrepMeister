@@ -1,21 +1,38 @@
-import { NextRequest,NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
-import Question from "@/models/questionModel";
+import { NextRequest, NextResponse } from "next/server";
 
-connect();
+export async function GET(req: NextRequest) {
+  try {
+    const slug = req.nextUrl.searchParams.get("slug");
 
-export async function POST(req: NextRequest) {
-    try{
-        const reqBody = await req.json();
-        const {slug} = reqBody;
-        const problem = await Question.findOne({slug})
-
-        if(!problem){
-            return NextResponse.json({message:"Problem not found",status:false},{status:400});
-        }
-        return NextResponse.json({problem},{status:200})
-
-    }catch(error:any){
-        return NextResponse.json({error:error.message},{status:500})
+    if (!slug) {
+      return NextResponse.json(
+        { message: "Slug is required", success: false },
+        { status: 400 }
+      );
     }
+
+    // Call backend API
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const response = await fetch(`${backendUrl}/api/problems/${slug}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      return NextResponse.json(
+        { message: "Problem not found", success: false },
+        { status: response.status }
+      );
+    }
+
+    const data = await response.json();
+    return NextResponse.json(data, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error.message || "Internal server error", success: false },
+      { status: 500 }
+    );
+  }
 }

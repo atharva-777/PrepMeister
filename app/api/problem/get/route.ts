@@ -1,24 +1,31 @@
-import { connect } from "@/dbConfig/dbConfig";
 import { NextRequest, NextResponse } from "next/server";
-import Question from "@/models/questionModel";
 
-connect();
-
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
-    // return NextResponse.json({message:'Request successful',success:true},{status:200});
-    // const data = await Question.find()
-    // const target = JSON.stringify(data)
-    const reqBody = await request.json();
-    const { lim } = reqBody;
-    const data = await Question.find({}).limit(lim);
-    return NextResponse.json({
-      message: "Success",
-      success: true,
-      // users,
-      data,
+    const limit = request.nextUrl.searchParams.get("limit") || "50";
+
+    // Call backend API
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const response = await fetch(`${backendUrl}/api/problems?limit=${limit}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
+
+    if (!response.ok) {
+      return NextResponse.json(
+        { message: "Failed to fetch problems", success: false },
+        { status: response.status }
+      );
+    }
+
+    const data = await response.json();
+    return NextResponse.json(data, { status: 200 });
   } catch (error: any) {
-    return NextResponse.json({ error: error.messsage }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || "Internal server error", success: false },
+      { status: 500 }
+    );
   }
 }

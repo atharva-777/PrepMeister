@@ -11,12 +11,17 @@ const UserProfile = () => {
   const user = session?.user;
   const router = useRouter();
 
-  if(!user){
-    router.push('/');
+  useEffect(() => {
+    if (!user) {
+      router.push('/');
+    }
+  }, [user, router]);
+
+  if (!user) {
+    return <div className="text-center py-8">Loading...</div>;
   }
 
-  return (
-    user && 
+  return ( 
     <div>
       <div className="text-center flex flex-col items-center justify-center h-screen p-24">
         <div className="space-y-3">

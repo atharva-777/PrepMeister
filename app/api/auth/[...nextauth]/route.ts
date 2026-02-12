@@ -1,11 +1,21 @@
 import NextAuth from "next-auth/next";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import User from "@/models/userModel";
-import bcryptjs from "bcryptjs";
-import { connect } from "@/dbConfig/dbConfig";
+import { JWT } from "next-auth/jwt";
+import { Session } from "next-auth";
 
-export const authOptions: NextAuthOptions = {
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id?: string;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+    };
+  }
+}
+
+const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -14,62 +24,72 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "your-password" },
       },
       async authorize(credentials, req) {
-        if (!credentials || !credentials.password || !credentials.email)
+        if (!credentials?.email || !credentials?.password) {
           return null;
+        }
+
         const { email, password } = credentials;
-        connect();
-        const user = await User.findOne({ email });
-        if (!user) {
+        
+        try {
+          const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+          const response = await fetch(`${backendUrl}/api/users/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+
+          if (!response.ok) {
+            return null;
+          }
+
+          const data = await response.json();
+          const user = data?.user;
+          
+          if (!user || !user._id) {
+            return null;
+          }
+
+          return {
+            id: String(user._id),
+            name: user.username || user.name || email,
+            email: user.email,
+          };
+        } catch (error) {
           return null;
         }
-
-        const validPassword = await bcryptjs.compare(password, user.password);
-
-        if (!validPassword) {
-          return null;
-        }
-        return {
-          id: user.id,
-          name: user.username,
-          email: user.email,
-        };
       },
     }),
   ],
 
   callbacks: {
-    async jwt({ token, user, session }) {
-      // console.log("jwt callback ",{token,user,session})
+    async jwt({ token, user }) {
       if (user) {
-        return {
-          ...token,
-          id: user.id,
-          idd:token.sub,
-        };
+        token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
       }
       return token;
     },
-    async session({ session, token, user }) {
-      // console.log("session callback ",{session,token,user})
-      return {
-        ...session,
-        user:{
-          ...session.user,
-          id: token.sub,
-        }
-      };
-      // return session;
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = (token.id as string) || "";
+        session.user.name = (token.name as string) || null;
+        session.user.email = (token.email as string) || null;
+      }
+      return session;
     },
   },
 
   session: {
     strategy: "jwt",
+    maxAge: 7 * 24 * 60 * 60, // 7 days
   },
 
-  secret:process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || "your-secret-key",
 
   pages: {
-    // signIn:'/login',
+    signIn: "/login",
+    error: "/login",
   },
 };
 

@@ -2,9 +2,9 @@
 
 import { signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, Suspense } from "react";
 
-export const LoginForm = () => {
+const LoginFormContent = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState({
@@ -17,11 +17,10 @@ export const LoginForm = () => {
   const callbackUrl = searchParams.get("callbackUrl") || "/profile";
 
   const onSubmit = async () => {
-    // e.preventDefault();
-    console.log("Request handling ",formValues)
     try {
       setLoading(true);
-      setFormValues({ email: "", password: "" });
+      setError("");
+      
       const res = await signIn("Credentials", {
         redirect: false,
         email: formValues.email,
@@ -31,18 +30,15 @@ export const LoginForm = () => {
 
       setLoading(false);
 
-      console.log(res);
-      if(res){
-        console.log("result ",res)
-      }
       if (!res?.error) {
+        setFormValues({ email: "", password: "" });
         router.push(callbackUrl);
       } else {
-        setError("invalid email or password");
+        setError(res.error || "Failed to sign in");
       }
     } catch (error: any) {
       setLoading(false);
-      setError(error);
+      setError(error?.message || "An error occurred during login");
     }
   };
 
@@ -92,5 +88,13 @@ export const LoginForm = () => {
         {loading ? "loading..." : "Sign In"}
       </button>
     </form>
+  );
+};
+
+export const LoginForm = () => {
+  return (
+    <Suspense fallback={<div className="text-center py-4">Loading...</div>}>
+      <LoginFormContent />
+    </Suspense>
   );
 };

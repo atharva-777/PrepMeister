@@ -1,18 +1,26 @@
-import { headers } from "next/dist/client/components/headers";
 import { api } from "../config/axios";
-import axios from "axios";
 
 class ProblemService {
-  static async getSingleProblem(slug: String | any ) {
-    const data = await api.post('/problems/getProblem',slug);
-    return data.data;
+  static async getSingleProblem(slug: string) {
+    const response = await fetch(`/api/problem/getProblem?slug=${slug}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    return data;
   }
-  static async getAllProblem(lim: number | any) {
-    const res = await api.post("/problems/getAllProblems", lim);
-    return res.data;
-  }
-  static async getAll(){
-    const res = await api.post("/problems/getAllProblems",{lim:5});
+
+  static async getAllProblems(limit: number = 50) {
+    const response = await fetch(`/api/problem/get?limit=${limit}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    return data;
   }
 }
 
