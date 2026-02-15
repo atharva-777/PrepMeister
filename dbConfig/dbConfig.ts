@@ -1,20 +1,8 @@
-import mongoose from "mongoose";
+// Database configuration is now handled by the backend
+// This file is kept for backward compatibility only
+// Frontend now communicates with backend API endpoints
 
-
-export async function connect () {
-    try{
-        await mongoose.connect(process.env.MONGO_URI!);
-        // mongoose.connect(process.env.MONGO_URL!);
-        const connection = mongoose.connection;
-        connection.on('connected',()=>{
-            // console.log('Connected to MongoDB successfully');
-        })
-        connection.on('error',()=>{
-            process.exit(0);
-        })
-    }
-    catch(error){
-        console.log('Something went wrong');
-        console.log(error);
-    }
+export async function connect() {
+  // This function is deprecated - frontend should use backend API
+  console.warn("Frontend should use backend API instead of direct DB connection");
 }

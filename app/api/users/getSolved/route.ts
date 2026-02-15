@@ -1,18 +1,29 @@
-import { connect } from "@/dbConfig/dbConfig";
-import { NextRequest,NextResponse } from "next/server";
-import User from "@/models/userModel";
+import { NextRequest, NextResponse } from "next/server";
 
-connect();
+export async function POST(req: NextRequest) {
+  try {
+    const reqBody = await req.json();
+    const { email } = reqBody;
 
-export async function POST(req:NextRequest){
-    try{
-        const reqBody = await req.json()
-        const {email}  = reqBody
-        // const data = await User.find({email}).select("-password -isVerified -isAdmin -__v")
-        const record = await User.find({email},{"solved":1,"_id":0}).sort('solved')
-        record.sort()
-        return NextResponse.json({record},{status:200})
-    }catch(error:any){
-        return NextResponse.json({error:error.message},{status:500})
+    // Call backend API instead of accessing database directly
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const response = await fetch(`${backendUrl}/api/users/${email}/solved`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      return NextResponse.json(
+        { message: "Failed to fetch solved problems", success: false },
+        { status: 400 }
+      );
     }
+
+    const record = await response.json();
+    return NextResponse.json({ record }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }

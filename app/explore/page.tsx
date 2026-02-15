@@ -23,8 +23,8 @@ const Explore = () => {
       // );
       // console.log("backend req",x.data)
       console.log("use query")
-      const d = await ProblemService.getSingleProblem({slug:"two-sum"});
-      console.log("by problemservice" ,d)
+      const d = await ProblemService.getSingleProblem("two-sum");
+      console.log("by problemservice", d)
     const p = await api.post("/problems/getProblem", {slug:"two-sum"});
       console.log("by api ",p.data)
       return p.data;
