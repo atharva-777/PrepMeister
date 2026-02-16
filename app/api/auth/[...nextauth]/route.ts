@@ -18,43 +18,54 @@ declare module "next-auth" {
 const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
+      id: "credentials",
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "text", placeholder: "your-email" },
-        password: { label: "Password", type: "your-password" },
+        password: { label: "Password", type: "password", placeholder: "your-password" },
       },
       async authorize(credentials, req) {
         if (!credentials?.email || !credentials?.password) {
+          console.error("NextAuth: Missing credentials");
           return null;
         }
 
         const { email, password } = credentials;
-        
+        const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
+
         try {
-          const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-          const response = await fetch(`${backendUrl}/api/users/login`, {
+          // Call our own API route (same origin) so backend is only hit from one place
+          const loginUrl = `${baseUrl}/api/users/login`;
+          console.log(`NextAuth: Attempting login for ${email} via ${loginUrl}`);
+
+          const response = await fetch(loginUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),
           });
 
+          const data = await response.json().catch(() => ({}));
+
           if (!response.ok) {
+            const errorMessage = data.message || data.error || `Login failed (${response.status})`;
+            console.error("NextAuth: Login failed", errorMessage);
             return null;
           }
 
-          const data = await response.json();
           const user = data?.user;
-          
           if (!user || !user._id) {
+            console.error("NextAuth: Invalid user data in response", data);
             return null;
           }
 
+          console.log("NextAuth: Login successful for user", user._id);
           return {
             id: String(user._id),
             name: user.username || user.name || email,
             email: user.email,
           };
-        } catch (error) {
+        } catch (error: any) {
+          console.error("NextAuth: Authorization error", error);
           return null;
         }
       },
@@ -78,6 +89,10 @@ const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    async signIn({ user, account, profile }) {
+      // Allow sign in if user exists
+      return !!user;
+    },
   },
 
   session: {
@@ -90,6 +105,17 @@ const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
     error: "/login",
+  },
+  
+  debug: process.env.NODE_ENV === "development",
+  
+  events: {
+    async signIn({ user, account, profile, isNewUser }) {
+      console.log("NextAuth: Sign in event", { userId: user?.id, email: user?.email });
+    },
+    async signOut() {
+      console.log("NextAuth: Sign out event");
+    },
   },
 };
 

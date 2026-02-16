@@ -1,6 +1,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ChangeEvent, useState, Suspense } from "react";
 
@@ -21,24 +22,41 @@ const LoginFormContent = () => {
       setLoading(true);
       setError("");
       
-      const res = await signIn("Credentials", {
+      console.log("LoginForm: Attempting sign in", { email: formValues.email });
+      
+      const res = await signIn("credentials", {
         redirect: false,
         email: formValues.email,
         password: formValues.password,
         callbackUrl,
       });
 
+      console.log("LoginForm: Sign in response", res);
+
       setLoading(false);
 
-      if (!res?.error) {
+      if (res?.error) {
+        // Handle specific error messages
+        const errorMessage = res.error === "CredentialsSignin" 
+          ? "Invalid email or password" 
+          : res.error || "Failed to sign in";
+        setError(errorMessage);
+        console.error("LoginForm: Sign in error", res.error);
+      } else if (res?.ok && !res?.error) {
         setFormValues({ email: "", password: "" });
-        router.push(callbackUrl);
+        const targetUrl = res?.url || callbackUrl;
+        console.log("LoginForm: Sign in successful, redirecting to", targetUrl);
+        // Use window.location so session is refreshed (required when using redirect: false)
+        window.location.href = targetUrl;
       } else {
-        setError(res.error || "Failed to sign in");
+        setError("An unexpected error occurred. Please try again.");
+        console.error("LoginForm: Unexpected response", res);
       }
     } catch (error: any) {
       setLoading(false);
-      setError(error?.message || "An error occurred during login");
+      const errorMessage = error?.message || "An error occurred during login";
+      setError(errorMessage);
+      console.error("LoginForm: Exception during sign in", error);
     }
   };
 
@@ -81,12 +99,18 @@ const LoginFormContent = () => {
       </div>
       <button
         type="submit"
-        style={{ backgroundColor: `${loading ? "#ccc" : "#3446eb"}` }}
-        className="inline-block px-7 py-4 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full"
+        style={{ backgroundColor: `${loading ? "#94a3b8" : "#2563eb"}` }}
+        className="inline-block px-7 py-4 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full disabled:opacity-60 disabled:cursor-not-allowed"
         disabled={loading}
       >
-        {loading ? "loading..." : "Sign In"}
+        {loading ? "Signing in..." : "Sign in"}
       </button>
+      <p className="text-center text-gray-600 text-sm mt-6">
+        New user?{" "}
+        <Link href="/signup" className="text-blue-600 font-medium hover:underline">
+          Sign up
+        </Link>
+      </p>
     </form>
   );
 };

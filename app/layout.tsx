@@ -2,8 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import Providers from "./providers/Providers";
-import Navbar from "./components/Navbar";
-import { getServerSession } from "next-auth";
+import NavbarWrapper from "./components/NavbarWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 const poppins = Poppins({
@@ -28,7 +27,7 @@ export default async function RootLayout({
         <main>
           {/* <Providers session={session}> */}
           <Providers>
-            <Navbar/>
+            <NavbarWrapper />
             <main className={poppins.className}>{children}</main>
           </Providers>
         </main>
