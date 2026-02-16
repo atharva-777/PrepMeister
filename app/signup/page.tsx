@@ -1,115 +1,150 @@
 "use client";
+
 import axios from "axios";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
-import toast,{Toaster} from 'react-hot-toast'
+import React, { useState, useEffect, ChangeEvent } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import {signIn} from 'next-auth/react'
-import AuthService from "../services/auth.service";
+import { useSession } from "next-auth/react";
+import Loader from "../components/Loader";
 
-function SignUp() {
+const input_style =
+  "form-control block w-full px-4 py-5 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none";
+
+export default function SignUp() {
   const router = useRouter();
-  const [disableButton, setDisableButton] = useState(true);
+  const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({
     username: "",
     email: "",
     password: "",
   });
+  const [disableButton, setDisableButton] = useState(true);
+
   useEffect(() => {
-    if (user.email.endsWith("@gmail.com") && user.username.length > 0 && user.password.length>5) {
-      setDisableButton(false);
-    } else {
-      setDisableButton(true);
+    if (status === "authenticated" && session?.user) {
+      router.replace("/problems");
+      return;
     }
+  }, [status, session, router]);
+
+  useEffect(() => {
+    const valid =
+      user.username.trim().length > 0 &&
+      user.email.includes("@") &&
+      user.email.includes(".") &&
+      user.password.length >= 6;
+    setDisableButton(!valid);
   }, [user]);
 
-  const handleChange = (e: { target: any }) => {
-    const { target } = e;
-    const { name, value } = target;
-    setUser({
-      ...user,
-      [name]: value,
-    });
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUser((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (disableButton) return;
     try {
-      console.log("Req happend")
-      // const res = await AuthService.signup(user);
-      
-      const res = await axios.post("/api/users/signup", { ...user });
-      console.log(res.data)
-    } catch (error:any) {
-      // console.log("Error",error)
-      toast.error('Something unexpected occured')
+      setLoading(true);
+      await axios.post("/api/users/signup", { ...user });
+      toast.success("Account created! You can log in now.");
+      router.push("/login");
+    } catch (error: any) {
+      const msg =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        "Something unexpected occurred";
+      toast.error(msg);
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (status === "loading") {
+    return (
+      <section className="min-h-screen pt-20 bg-blue-600 flex items-center justify-center">
+        <Loader variant="page" message="Loading..." dark />
+      </section>
+    );
+  }
+
+  if (status === "authenticated") {
+    return null; // redirecting
+  }
+
   return (
-    <div className="text-center justify-center items-center h-screen flex flex-col">
+    <>
       <Toaster />
-
-      <h1 className="text-3xl font-bold p-2">Signup</h1>
-      <form
-        action="#"
-        className="my-12 justify-center items-center text-center"
-      >
-        <div className="space-x-4 m-4">
-          <label htmlFor="name">Username:</label>
-          <input
-            type="text"
-            name="username"
-            placeholder="Enter username"
-            className="border shadow hover:shadow-slate-700 p-4"
-            value={user.username}
-            onChange={handleChange}
-            required
-          />
+      <section className="min-h-screen pt-20 bg-blue-600">
+        <div className="container mx-auto px-6 py-12 h-full flex justify-center items-center">
+          <div className="md:w-8/12 lg:w-5/12 bg-white px-8 py-10 rounded-lg shadow-xl">
+            <h1 className="text-2xl font-bold text-gray-800 mb-2 text-center">
+              Create account
+            </h1>
+            <p className="text-gray-500 text-sm text-center mb-8">
+              Sign up to start practicing problems
+            </p>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-6">
+                <input
+                  type="text"
+                  name="username"
+                  placeholder="Username"
+                  className={input_style}
+                  value={user.username}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="mb-6">
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email address"
+                  className={input_style}
+                  value={user.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="mb-6">
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Password (min 6 characters)"
+                  className={input_style}
+                  value={user.password}
+                  onChange={handleChange}
+                  required
+                  minLength={6}
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={disableButton || loading}
+                className="inline-block px-7 py-4 w-full text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed"
+                style={{
+                  backgroundColor:
+                    disableButton || loading ? "#94a3b8" : "#2563eb",
+                }}
+              >
+                {loading ? "Creating account..." : "Sign up"}
+              </button>
+            </form>
+            <p className="text-center text-gray-600 text-sm mt-6">
+              Already have an account?{" "}
+              <Link
+                href="/login"
+                className="text-blue-600 font-medium hover:underline"
+              >
+                Log in
+              </Link>
+            </p>
+          </div>
         </div>
-        <div className="space-x-4 m-4">
-          <label htmlFor="name">Email:</label>
-          <input
-            type="text"
-            name="email"
-            placeholder="Enter Email"
-            className="border shadow hover:shadow-slate-700 p-4"
-            value={user.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="space-x-4 m-4">
-          <label htmlFor="name">password:</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter Password"
-            className="border shadow hover:shadow-slate-700 p-4"
-            value={user.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="text-center">
-          <button
-            onClick={(e) => handleSubmit(e)}
-            type="submit"
-            // className="hover:bg-green-600 bg-green-400 p-3 font-medium text-center rounded text-md"
-            className={`${
-              disableButton == true ? "hover:bg-red-600" : "hover:bg-green-600"
-            } bg-green-400 p-3 font-medium text-center rounded text-md`}
-            disabled={disableButton}
-          >
-            Submit
-          </button>
-        </div>
-      </form>
-      <h3>
-        Already have account? <Link href="/login">Login</Link>
-      </h3>
-    </div>
+      </section>
+    </>
   );
 }
-
-export default SignUp;

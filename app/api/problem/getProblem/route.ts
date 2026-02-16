@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
 
     // Call backend API
     const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-    const response = await fetch(`${backendUrl}/api/problems/${slug}`, {
+    const response = await fetch(`${backendUrl}/api/v1/problems/${slug}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

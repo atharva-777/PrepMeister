@@ -7,6 +7,7 @@ export async function POST(request: NextRequest) {
 
     // Call backend API for login
     const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    console.log("Here present ",backendUrl, email, password)
     const response = await fetch(`${backendUrl}/api/users/login`, {
       method: "POST",
       headers: {

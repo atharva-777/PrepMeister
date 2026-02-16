@@ -6,6 +6,7 @@ import Split from "react-split";
 import { useQuery } from "react-query";
 import ProblemService from "@/app/services/problem.service";
 import { useSession } from "next-auth/react";
+import Loader from "@/app/components/Loader";
 
 interface ProblemType {
   _id: string;
@@ -29,7 +30,7 @@ type WorkspaceProps = {
 };
 
 const Workspace: React.FC<WorkspaceProps> = ({ slug }) => {
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const [problem, setProblem] = useState<ProblemType>();
 
   const { isLoading, error, data } = useQuery({
@@ -47,6 +48,14 @@ const Workspace: React.FC<WorkspaceProps> = ({ slug }) => {
     },
   });
 
+  if (sessionStatus === "loading") {
+    return (
+      <div className="h-screen flex items-center justify-center bg-gray-50">
+        <Loader variant="page" message="Checking session..." />
+      </div>
+    );
+  }
+
   if (!session?.user) {
     return (
       <div className="h-screen flex items-center justify-center bg-gray-50">
@@ -61,10 +70,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ slug }) => {
   if (isLoading) {
     return (
       <div className="h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading problem...</p>
-        </div>
+        <Loader variant="page" message="Loading problem..." />
       </div>
     );
   }

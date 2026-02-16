@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { BsCheckCircle, BsCircle } from "react-icons/bs";
 import ProblemService from "../services/problem.service";
 import axios from "axios";
+import Loader from "../components/Loader";
 
 interface ProblemType {
   _id: string;
@@ -18,7 +19,7 @@ interface ProblemType {
 }
 
 const Problems = () => {
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const [solved, setSolved] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(null);
@@ -72,6 +73,30 @@ const Problems = () => {
     }
   };
 
+  const isLoadingSession = sessionStatus === "loading";
+  const showContent = sessionStatus === "authenticated" && session?.user;
+
+  if (isLoadingSession) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-20">
+        <Loader variant="page" message="Loading..." />
+      </div>
+    );
+  }
+
+  if (!showContent) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-20 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600 mb-4">Please log in to view problems</p>
+          <Link href="/login" className="text-blue-600 font-medium hover:underline">
+            Go to Login
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
@@ -123,7 +148,7 @@ const Problems = () => {
         {/* Problems Table */}
         <div className="bg-white rounded-lg shadow overflow-hidden">
           {isLoading ? (
-            <div className="p-8 text-center text-gray-500">Loading problems...</div>
+            <Loader variant="section" message="Loading problems..." />
           ) : filteredProblems.length === 0 ? (
             <div className="p-8 text-center text-gray-500">No problems found</div>
           ) : (
