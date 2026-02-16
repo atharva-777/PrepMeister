@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ChangeEvent, useState, Suspense } from "react";
+import Loader from "./Loader";
 
 const LoginFormContent = () => {
   const router = useRouter();
@@ -117,7 +118,7 @@ const LoginFormContent = () => {
 
 export const LoginForm = () => {
   return (
-    <Suspense fallback={<div className="text-center py-4">Loading...</div>}>
+    <Suspense fallback={<Loader variant="page" message="Loading..." dark />}>
       <LoginFormContent />
     </Suspense>
   );
