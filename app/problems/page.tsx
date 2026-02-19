@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { useQuery } from "react-query";
 import { useSession } from "next-auth/react";
@@ -18,11 +18,18 @@ interface ProblemType {
   slug: string;
 }
 
+type StatusFilter = "all" | "solved" | "unsolved";
+type SortFilter = "number-asc" | "number-desc" | "title-asc";
+
 const Problems = () => {
   const { data: session, status: sessionStatus } = useSession();
   const [solved, setSolved] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(null);
+  const [selectedDifficulties, setSelectedDifficulties] = useState<string[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<StatusFilter>("all");
+  const [selectedTag, setSelectedTag] = useState("all");
+  const [selectedCompany, setSelectedCompany] = useState("all");
+  const [sortBy, setSortBy] = useState<SortFilter>("number-asc");
 
   const getSolvedProblems = useCallback(async () => {
     try {
@@ -49,16 +56,98 @@ const Problems = () => {
     enabled: !!session?.user,
   });
 
-  // Filter problems based on search and difficulty
-  const filteredProblems = (problemsData || []).filter((problem: ProblemType) => {
-    const matchesSearch = 
-      problem.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      problem.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    
-    const matchesDifficulty = !selectedDifficulty || problem.level === selectedDifficulty;
-    
-    return matchesSearch && matchesDifficulty;
-  });
+  const allTags = useMemo(() => {
+    const uniqueTags = new Set<string>();
+    (problemsData || []).forEach((problem: ProblemType) => {
+      problem.tags.forEach((tag) => uniqueTags.add(tag));
+    });
+    return Array.from(uniqueTags).sort((a, b) => a.localeCompare(b));
+  }, [problemsData]);
+
+  const allCompanies = useMemo(() => {
+    const uniqueCompanies = new Set<string>();
+    (problemsData || []).forEach((problem: ProblemType) => {
+      problem.company.forEach((company) => uniqueCompanies.add(company));
+    });
+    return Array.from(uniqueCompanies).sort((a, b) => a.localeCompare(b));
+  }, [problemsData]);
+
+  const filteredProblems = useMemo(() => {
+    const normalizedSearch = searchQuery.trim().toLowerCase();
+
+    const result = (problemsData || []).filter((problem: ProblemType) => {
+      const isSolved = solved.includes(problem.number);
+
+      const matchesSearch =
+        !normalizedSearch ||
+        problem.title.toLowerCase().includes(normalizedSearch) ||
+        problem.tags.some((tag) => tag.toLowerCase().includes(normalizedSearch)) ||
+        problem.company.some((company) => company.toLowerCase().includes(normalizedSearch)) ||
+        problem.number.toString().includes(normalizedSearch);
+
+      const matchesDifficulty =
+        selectedDifficulties.length === 0 || selectedDifficulties.includes(problem.level);
+
+      const matchesStatus =
+        selectedStatus === "all" ||
+        (selectedStatus === "solved" && isSolved) ||
+        (selectedStatus === "unsolved" && !isSolved);
+
+      const matchesTag =
+        selectedTag === "all" ||
+        problem.tags.some((tag) => tag.toLowerCase() === selectedTag.toLowerCase());
+
+      const matchesCompany =
+        selectedCompany === "all" ||
+        problem.company.some(
+          (company) => company.toLowerCase() === selectedCompany.toLowerCase()
+        );
+
+      return (
+        matchesSearch &&
+        matchesDifficulty &&
+        matchesStatus &&
+        matchesTag &&
+        matchesCompany
+      );
+    });
+
+    switch (sortBy) {
+      case "number-desc":
+        return [...result].sort((a, b) => b.number - a.number);
+      case "title-asc":
+        return [...result].sort((a, b) => a.title.localeCompare(b.title));
+      case "number-asc":
+      default:
+        return [...result].sort((a, b) => a.number - b.number);
+    }
+  }, [
+    problemsData,
+    searchQuery,
+    selectedDifficulties,
+    selectedStatus,
+    selectedTag,
+    selectedCompany,
+    sortBy,
+    solved,
+  ]);
+
+  const toggleDifficulty = (difficulty: string) => {
+    setSelectedDifficulties((prev) =>
+      prev.includes(difficulty)
+        ? prev.filter((item) => item !== difficulty)
+        : [...prev, difficulty]
+    );
+  };
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setSelectedDifficulties([]);
+    setSelectedStatus("all");
+    setSelectedTag("all");
+    setSelectedCompany("all");
+    setSortBy("number-asc");
+  };
 
   const getDifficultyColor = (level: string) => {
     switch (level) {
@@ -100,41 +189,29 @@ const Problems = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Problems</h1>
           <p className="text-gray-600">Master DSA problems used in technical interviews</p>
         </div>
 
-        {/* Search and Filter */}
-        <div className="mb-6 space-y-4">
+        <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4 sm:p-5 shadow-sm space-y-4">
           <div className="relative">
             <input
               type="text"
-              placeholder="Search problems by title or tags..."
+              placeholder="Search by title, tags, company or problem #"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
           </div>
 
-          <div className="flex gap-2 flex-wrap">
-            <button
-              onClick={() => setSelectedDifficulty(null)}
-              className={`px-4 py-2 rounded-lg font-medium transition ${
-                selectedDifficulty === null
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
-              }`}
-            >
-              All
-            </button>
+          <div className="flex flex-wrap gap-2">
             {["easy", "medium", "hard"].map((difficulty) => (
               <button
                 key={difficulty}
-                onClick={() => setSelectedDifficulty(difficulty)}
+                onClick={() => toggleDifficulty(difficulty)}
                 className={`px-4 py-2 rounded-lg font-medium transition capitalize ${
-                  selectedDifficulty === difficulty
+                  selectedDifficulties.includes(difficulty)
                     ? "bg-blue-600 text-white"
                     : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
                 }`}
@@ -143,9 +220,69 @@ const Problems = () => {
               </button>
             ))}
           </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value as StatusFilter)}
+              className="px-3 py-2 rounded-lg border border-gray-300 bg-white text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="all">All Status</option>
+              <option value="solved">Solved</option>
+              <option value="unsolved">Unsolved</option>
+            </select>
+
+            <select
+              value={selectedTag}
+              onChange={(e) => setSelectedTag(e.target.value)}
+              className="px-3 py-2 rounded-lg border border-gray-300 bg-white text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="all">All Tags</option>
+              {allTags.map((tag) => (
+                <option key={tag} value={tag}>
+                  {tag}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedCompany}
+              onChange={(e) => setSelectedCompany(e.target.value)}
+              className="px-3 py-2 rounded-lg border border-gray-300 bg-white text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="all">All Companies</option>
+              {allCompanies.map((company) => (
+                <option key={company} value={company}>
+                  {company}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortFilter)}
+              className="px-3 py-2 rounded-lg border border-gray-300 bg-white text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="number-asc">Sort: Number (asc)</option>
+              <option value="number-desc">Sort: Number (desc)</option>
+              <option value="title-asc">Sort: Title (A-Z)</option>
+            </select>
+          </div>
+
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <p className="text-sm text-gray-600">
+              Showing <span className="font-semibold text-gray-900">{filteredProblems.length}</span> of {" "}
+              <span className="font-semibold text-gray-900">{problemsData?.length || 0}</span> problems
+            </p>
+            <button
+              onClick={clearFilters}
+              className="px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
+            >
+              Reset Filters
+            </button>
+          </div>
         </div>
 
-        {/* Problems Table */}
         <div className="bg-white rounded-lg shadow overflow-hidden">
           {isLoading ? (
             <Loader variant="section" message="Loading problems..." />
@@ -220,7 +357,6 @@ const Problems = () => {
           )}
         </div>
 
-        {/* Stats */}
         <div className="mt-8 grid grid-cols-3 gap-4">
           <div className="bg-white p-6 rounded-lg shadow text-center">
             <p className="text-gray-600 text-sm">Total Problems</p>
