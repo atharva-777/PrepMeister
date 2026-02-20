@@ -1,39 +1,44 @@
 import React from "react";
-import {BsChevronUp} from 'react-icons/bs'
+import { BsChevronUp } from "react-icons/bs";
 
 type EditorFooterProps = {
   handleSubmit: () => void;
-  handleCompile : () => void;
+  handleCompile: () => void;
+  processing: boolean;
 };
 
-const EditorFooter:React.FC<EditorFooterProps> = ({handleSubmit,handleCompile}) => {
-    return (
-      <div className="flex bg-dark-layer-1 absolute bottom-0 z-10 w-full">
-        <div className="mx-5 my-[10px] flex justify-between w-full">
-          <div className="mr-2 flex flex-1 flex-nowrap items-center space-x-4">
-            <button className="px-3 py-1.5 font-medium items-center transition-all inline-flex bg-slate-500 text-sm hover:bg-dark-fill-2 text-dark-label-2 rounded-lg pl-3 pr-2">
-              Console
-              <div className="ml-1 transform transition flex items-center">
-                <BsChevronUp className="fill-gray-6 mx-1 fill-dark-gray-6" />
-              </div>
-            </button>
-          </div>
-          <div className="ml-auto flex items-center space-x-4">
-            <button
-              className="px-3 py-1.5 text-sm font-medium items-center whitespace-nowrap transition-all focus:outline-none inline-flex bg-stone-500  hover:bg-stone-600 text-dark-label-2 rounded-lg"
-              onClick={handleCompile}
-            >
-              Run
-            </button>
-            <button
-              className="px-3 py-1.5 font-medium items-center transition-all focus:outline-none inline-flex text-sm text-white bg-green-500 hover:bg-green-600 rounded-lg"
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
-          </div>
+const EditorFooter: React.FC<EditorFooterProps> = ({
+  handleSubmit,
+  handleCompile,
+  processing,
+}) => {
+  return (
+    <div className="w-full border-t border-slate-700/60 bg-slate-950/80 px-4 py-2 backdrop-blur">
+      <div className="flex items-center justify-between gap-4">
+        <div className="inline-flex items-center gap-1 rounded-lg border border-slate-700 bg-slate-800/80 px-3 py-1.5 text-xs text-slate-300">
+          Console
+          <BsChevronUp className="text-slate-400" />
+        </div>
+
+        <div className="ml-auto flex items-center gap-2">
+          <button
+            className="rounded-lg border border-cyan-500/60 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+            onClick={handleCompile}
+            disabled={processing}
+          >
+            {processing ? "Running..." : "Run"}
+          </button>
+          <button
+            className="rounded-lg border border-emerald-500/60 bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-200 transition hover:bg-emerald-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+            onClick={handleSubmit}
+            disabled={processing}
+          >
+            {processing ? "Submitting..." : "Submit"}
+          </button>
         </div>
       </div>
-    );
-}
-export default EditorFooter
+    </div>
+  );
+};
+
+export default EditorFooter;

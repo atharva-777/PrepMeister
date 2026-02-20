@@ -1,11 +1,8 @@
 "use client";
 import Link from "next/link";
 import React from "react";
-import Image from "next/image";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { BsList } from "react-icons/bs";
-import { useRouter } from "next/navigation";
-import "@/public/assets/prepmeisterlogo.png";
 import Avatar from "react-avatar";
 import Timer from "./Timer";
 import { useSession } from "next-auth/react";
@@ -15,12 +12,11 @@ const problemPage = true;
   const Topbar = () => {
   const {data:session} = useSession();
   const user = session?.user;
-  const router = useRouter();
 
   const handleProblemChange = (isForward: boolean) => {};
 
   return (
-    <nav className="flex h-[60px] pt-24 w-full shrink-0 items-center px-5 relative  p-8 border overflow-hidden">
+    <nav className="flex h-[60px] w-full shrink-0 items-center px-5 relative border-b bg-white">
       <div
         className={`flex w-full items-center justify-between ${
           !problemPage ? "max-w-[1200px] mx-auto" : ""

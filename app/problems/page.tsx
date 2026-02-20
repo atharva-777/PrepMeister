@@ -85,8 +85,10 @@ const Problems = () => {
         problem.company.some((company) => company.toLowerCase().includes(normalizedSearch)) ||
         problem.number.toString().includes(normalizedSearch);
 
+      const normalizedLevel = (problem.level || "").toLowerCase();
       const matchesDifficulty =
-        selectedDifficulties.length === 0 || selectedDifficulties.includes(problem.level);
+        selectedDifficulties.length === 0 ||
+        selectedDifficulties.includes(normalizedLevel);
 
       const matchesStatus =
         selectedStatus === "all" ||
@@ -133,10 +135,11 @@ const Problems = () => {
   ]);
 
   const toggleDifficulty = (difficulty: string) => {
+    const normalizedDifficulty = difficulty.toLowerCase();
     setSelectedDifficulties((prev) =>
-      prev.includes(difficulty)
-        ? prev.filter((item) => item !== difficulty)
-        : [...prev, difficulty]
+      prev.includes(normalizedDifficulty)
+        ? prev.filter((item) => item !== normalizedDifficulty)
+        : [...prev, normalizedDifficulty]
     );
   };
 
@@ -150,7 +153,7 @@ const Problems = () => {
   };
 
   const getDifficultyColor = (level: string) => {
-    switch (level) {
+    switch ((level || "").toLowerCase()) {
       case "easy":
         return "bg-green-100 text-green-800";
       case "medium":
@@ -206,6 +209,16 @@ const Problems = () => {
           </div>
 
           <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setSelectedDifficulties([])}
+              className={`px-4 py-2 rounded-lg font-medium transition ${
+                selectedDifficulties.length === 0
+                  ? "bg-blue-600 text-white"
+                  : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+              }`}
+            >
+              All Difficulty
+            </button>
             {["easy", "medium", "hard"].map((difficulty) => (
               <button
                 key={difficulty}
