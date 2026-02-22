@@ -22,7 +22,26 @@ export default async function RootLayout({
 }) {
   // const session = await getServerSession(authOptions)
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function () {
+                try {
+                  var key = 'prepmeister-theme';
+                  var stored = localStorage.getItem(key);
+                  var theme = stored === 'light' ? 'light' : 'dark';
+                  var root = document.documentElement;
+                  root.classList.remove('light', 'dark');
+                  root.classList.add(theme);
+                  root.setAttribute('data-theme', theme);
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className={inter.className}>
         <main>
           {/* <Providers session={session}> */}

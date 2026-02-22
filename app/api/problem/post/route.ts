@@ -20,22 +20,35 @@ export async function POST(req: NextRequest) {
 
     // Call backend API instead of accessing database directly
     const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-    const response = await fetch(`${backendUrl}/api/problems`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newQuestion),
-    });
+    const endpoints = ["/api/v1/problems", "/api/problems"];
+    let savedQuestion = null;
+    let statusCode = 400;
 
-    if (!response.ok) {
+    for (const endpoint of endpoints) {
+      const response = await fetch(`${backendUrl}${endpoint}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newQuestion),
+      });
+
+      if (response.ok) {
+        savedQuestion = await response.json();
+        statusCode = 200;
+        break;
+      }
+
+      statusCode = response.status;
+    }
+
+    if (!savedQuestion) {
       return NextResponse.json(
         { message: "Failed to save problem", success: false },
-        { status: 400 }
+        { status: statusCode }
       );
     }
 
-    const savedQuestion = await response.json();
     return NextResponse.json({
       message: "Question saved successfully",
       success: true,

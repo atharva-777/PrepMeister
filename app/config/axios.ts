@@ -1,9 +1,11 @@
 import axios from 'axios'
 
+const rawBackendBaseUrl =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const backendBaseUrl = rawBackendBaseUrl.replace(/\/+$/, "");
+
 export const api = axios.create({
-  // baseURL: `${process.env.BASE_URL}`,
-  // baseURL:"http://localhost:3000/api",
-  baseURL:"http://localhost:4000/api/v1",
+  baseURL: `${backendBaseUrl}/api/v1`,
   headers: {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
